@@ -1,0 +1,278 @@
+{
+  "site": {
+    "brand": "LUNGNUAD PRODUCTION",
+    "tagline": "Stories that move.",
+    "email": "lungnuadnst@gmail.com",
+    "facebookLabel": "ลุงหนวด ช่างภาพ",
+    "facebookUrl": "https://www.facebook.com/search/top?q=%E0%B8%A5%E0%B8%B8%E0%B8%87%E0%B8%AB%E0%B8%99%E0%B8%A7%E0%B8%94+%E0%B8%82%E0%B9%85%E0%B8%B2%E0%B8%87%E0%B8%A0%E0%B8%B2%E0%B8%9E",
+    "serviceArea": "นครศรีธรรมราช, ภาคใต้ และทั่วประเทศ"
+  },
+  "services": [
+    {
+      "title": "วีดีโอโฆษณา & Viral Clips",
+      "text": "เพิ่มยอดขายและเพิ่มพลังการรับรู้ของแบรนด์ด้วยวิดีโอโปรโมทสินค้า โฆษณาออนไลน์ และไวรัลคลิปที่สร้างสรรค์ เจาะกลุ่มเป้าหมายอย่างมีประสิทธิภาพ"
+    },
+    {
+      "title": "Wedding Cinema & งานพิธี",
+      "text": "บันทึกความทรงจำแสนพิเศษในวันสำคัญด้วยงานถ่ายภาพนิ่งและภาพยนตร์แต่งงาน ถ่ายทอดความรู้สึกและบรรยากาศอย่างเป็นธรรมชาติ"
+    },
+    {
+      "title": "Corporate Presentation",
+      "text": "นำเสนอภาพลักษณ์องค์กร บริษัท โรงแรม หน่วยงาน หรือโครงการด้วยภาพที่น่าเชื่อถือ ทันสมัย และมีพลัง"
+    },
+    {
+      "title": "สื่อการสอน & สัมมนา",
+      "text": "ผลิตสื่อการสอนออนไลน์ วิดีโออบรม และระบบ Live Streaming / Online Meeting แบบครบกระบวนการ"
+    }
+  ],
+  "reviews": [
+    {
+      "quote": "งานวิดีโอแต่งงานออกมาสวยมากครับ ลุงหนวดเก็บทุกบรรยากาศ อารมณ์ ความซาบซึ้ง ได้เหมือนนั่งดูภาพยนตร์เลยครับ",
+      "name": "คุณอภิชาติ และ คุณเมทินี",
+      "role": "Wedding Cinema Client"
+    },
+    {
+      "quote": "ภาพพรีเซนเทชั่นโรงแรม Navakitel ออกมาสวยงาม ทรงพลัง ทีมงานตรงเวลาและเข้าใจโจทย์การสื่อสารเป็นอย่างดี",
+      "name": "ฝ่ายการตลาด Navakitel Design Hotel",
+      "role": "Commercial Hotel Client"
+    },
+    {
+      "quote": "สื่อการสอนออนไลน์ภาพคมชัด ตัดต่อไหลลื่น กระชับ และดูแลจนเสร็จสิ้นงาน",
+      "name": "ผู้บริหาร โรงเรียนอนุบาลคำแหง",
+      "role": "Online Education Client"
+    }
+  ],
+  "projects": [
+    {
+      "slug": "perfect-d1-all-in-one-serum",
+      "title": "PERFECT D1",
+      "subtitle": "ALL IN ONE SERUM",
+      "category": "TVC / Commercial",
+      "client": "PERFECT D1",
+      "year": "Portfolio",
+      "description": "ภาพยนตร์โฆษณาเซรั่มบำรุงผิวหน้า ถ่ายทอดความพรีเมียมและความงดงามของแบรนด์ด้วยการจัดแสงและงานภาพเชิงโฆษณา",
+      "tags": [
+        "Commercial",
+        "Beauty",
+        "TVC"
+      ],
+      "cover": "https://img.youtube.com/vi/UHFBoMT-6yc/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/UHFBoMT-6yc/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/UHFBoMT-6yc/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "UHFBoMT-6yc"
+      },
+      "featured": true
+    },
+    {
+      "slug": "pura-d1-perfect-whitening",
+      "title": "PURA D1",
+      "subtitle": "PERFECT WHITENING",
+      "category": "TVC / Commercial",
+      "client": "PURA D1",
+      "year": "Portfolio",
+      "description": "วิดีโอโฆษณาผลิตภัณฑ์เซรั่มบำรุงผิวกาย นำเสนอความกระจ่างใสและภาพลักษณ์อันทันสมัยของผลิตภัณฑ์",
+      "tags": [
+        "Commercial",
+        "Beauty",
+        "Product"
+      ],
+      "cover": "https://img.youtube.com/vi/l9cVB-k66Q0/hqdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/l9cVB-k66Q0/hqdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/l9cVB-k66Q0/hqdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "l9cVB-k66Q0"
+      }
+    },
+    {
+      "slug": "soap-d1-pura",
+      "title": "SOAP D1 PURA",
+      "subtitle": "PERFECT WHITENING",
+      "category": "TVC / Commercial",
+      "client": "PURA",
+      "year": "Portfolio",
+      "description": "ผลงานผลิตสื่อโฆษณาสบู่ ถ่ายทอดความสะอาด สดชื่น ความมั่นใจ และคุณภาพของผลิตภัณฑ์",
+      "tags": [
+        "Commercial",
+        "Product",
+        "TVC"
+      ],
+      "cover": "https://img.youtube.com/vi/4X1IcSbIOz4/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/4X1IcSbIOz4/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/4X1IcSbIOz4/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "4X1IcSbIOz4"
+      }
+    },
+    {
+      "slug": "cream-d1-all-in-one",
+      "title": "Cream D1",
+      "subtitle": "All in one cream",
+      "category": "TVC / Commercial",
+      "client": "D1",
+      "year": "Portfolio",
+      "description": "วิดีโอโปรโมทครีมบำรุงผิวสูตรเข้มข้น โดดเด่นด้วยงานภาพเชิงศิลปะ คุณภาพสูง และสีสันที่ดึงดูดสายตา",
+      "tags": [
+        "Commercial",
+        "Beauty",
+        "Product"
+      ],
+      "cover": "https://img.youtube.com/vi/KqFt0Uybb90/hqdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/KqFt0Uybb90/hqdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/KqFt0Uybb90/hqdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "KqFt0Uybb90"
+      }
+    },
+    {
+      "slug": "tat-mana",
+      "title": "โฆษณา APP TAT MANA",
+      "subtitle": "การท่องเที่ยวนครศรีธรรมราช",
+      "category": "โฆษณา / PR",
+      "client": "TAT MANA",
+      "year": "Portfolio",
+      "description": "ตัวอย่างผลงานโฆษณา APP TAT MANA / การท่องเที่ยวนครศรีธรรมราช",
+      "tags": [
+        "PR",
+        "Travel",
+        "Commercial"
+      ],
+      "cover": "https://img.youtube.com/vi/d5-WL3ZhIjI/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/d5-WL3ZhIjI/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/d5-WL3ZhIjI/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "d5-WL3ZhIjI"
+      }
+    },
+    {
+      "slug": "luckyhome-pattanakarn-4",
+      "title": "Luckyhome",
+      "subtitle": "Pattanakarn #4",
+      "category": "โฆษณา / PR",
+      "client": "Luckyhome",
+      "year": "Portfolio",
+      "description": "วิดีโอโฆษณาพรีเซนต์โครงการบ้านเดี่ยวและทาวน์โฮมทำเลดี",
+      "tags": [
+        "Property",
+        "PR",
+        "Commercial"
+      ],
+      "cover": "https://img.youtube.com/vi/2ZJ_qtu-TKI/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/2ZJ_qtu-TKI/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/2ZJ_qtu-TKI/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "2ZJ_qtu-TKI"
+      }
+    },
+    {
+      "slug": "food-science-wu",
+      "title": "วิทยาศาสตร์อาหารและนวัตกรรม",
+      "subtitle": "Walailak University",
+      "category": "Presentation / Education",
+      "client": "มหาวิทยาลัยวลัยลักษณ์",
+      "year": "Portfolio",
+      "description": "วิดีโอแนะนำหลักสูตรและห้องปฏิบัติการสุดทันสมัย มหาวิทยาลัยวลัยลักษณ์",
+      "tags": [
+        "Education",
+        "Presentation",
+        "University"
+      ],
+      "cover": "https://img.youtube.com/vi/b9QPNk-hvjw/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/b9QPNk-hvjw/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/b9QPNk-hvjw/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "b9QPNk-hvjw"
+      }
+    },
+    {
+      "slug": "toshiba-run-2020",
+      "title": "Toshiba Run 2020",
+      "subtitle": "ขนอม-สิชล คนเมืองคอน",
+      "category": "Presentation / Event",
+      "client": "Toshiba Run",
+      "year": "2020",
+      "description": "บรรยากาศงานวิ่งการกุศลสุดคึกคัก เลียบทะเลแดนใต้",
+      "tags": [
+        "Event",
+        "Presentation",
+        "Sport"
+      ],
+      "cover": "https://static.wixstatic.com/media/52f9cc_a04f544c0af24a9aac3d4e9738621ba0~mv2.jpg",
+      "vertical": "https://static.wixstatic.com/media/52f9cc_a04f544c0af24a9aac3d4e9738621ba0~mv2.jpg",
+      "gallery": [
+        "https://static.wixstatic.com/media/52f9cc_a04f544c0af24a9aac3d4e9738621ba0~mv2.jpg"
+      ],
+      "video": {
+        "type": "none",
+        "src": ""
+      }
+    },
+    {
+      "slug": "ruts-management-technology",
+      "title": "คณะเทคโนโลยีการจัดการ",
+      "subtitle": "มทร.ศรีวิชัย",
+      "category": "Behind the Scene / PR",
+      "client": "มทร.ศรีวิชัย",
+      "year": "Portfolio",
+      "description": "วิดีโอแนะนำคณะหลักสูตรเทคโนโลยีและการจัดการนวัตกรรม",
+      "tags": [
+        "Education",
+        "PR",
+        "BTS"
+      ],
+      "cover": "https://img.youtube.com/vi/GkcQNj3-6nM/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/GkcQNj3-6nM/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/GkcQNj3-6nM/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "GkcQNj3-6nM"
+      }
+    },
+    {
+      "slug": "phipun-hospital-2024",
+      "title": "PHIPUN HOSPITAL",
+      "subtitle": "Corporate Presentation 2024",
+      "category": "Presentation / Corporate",
+      "client": "โรงพยาบาลพิปูน",
+      "year": "2024",
+      "description": "ภาพยนตร์สั้นพรีเซนเทชั่นนำเสนอคุณภาพและการให้บริการของโรงพยาบาลพิปูน",
+      "tags": [
+        "Corporate",
+        "Hospital",
+        "Presentation"
+      ],
+      "cover": "https://img.youtube.com/vi/bEL-HWG4ha0/maxresdefault.jpg",
+      "vertical": "https://img.youtube.com/vi/bEL-HWG4ha0/maxresdefault.jpg",
+      "gallery": [
+        "https://img.youtube.com/vi/bEL-HWG4ha0/maxresdefault.jpg"
+      ],
+      "video": {
+        "type": "youtube",
+        "src": "bEL-HWG4ha0"
+      }
+    }
+  ]
+}
