@@ -616,3 +616,286 @@ h1, h2, h3 { line-height: 1.16; }
   .home-hero-after-cover{margin-top:14px}
   .compact-profile{display:none!important}
 }
+
+
+/* Build 09 — Projects layout stability + Desktop Reel fit */
+
+/* Projects: avatar and cover never overlap. */
+.project-profile-v2{
+  overflow:hidden;
+}
+.project-cover-v2{
+  height:auto !important;
+  aspect-ratio:16/6;
+  min-height:300px;
+  max-height:460px;
+  background-size:cover;
+  background-position:center;
+}
+.project-profile-main-v2{
+  padding:28px 32px 30px !important;
+  display:grid !important;
+  grid-template-columns:112px minmax(0,1fr) minmax(300px,390px) !important;
+  gap:24px !important;
+  align-items:start !important;
+}
+.project-avatar-v2{
+  width:112px;
+  height:112px;
+}
+.project-avatar-v2 img{
+  display:block;
+  width:112px !important;
+  height:112px !important;
+  margin:0 !important;
+  border:0 !important;
+  border-radius:28px !important;
+  object-fit:cover;
+}
+.project-profile-copy-v2{
+  min-width:0;
+}
+.project-profile-copy-v2 h1{
+  font-size:clamp(30px,3vw,42px) !important;
+  line-height:1.12 !important;
+  margin:0 0 5px !important;
+  flex-wrap:wrap;
+}
+.project-profile-description{
+  margin-top:8px !important;
+}
+.profile-meta-v2{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  align-self:stretch;
+}
+.profile-meta-v2 div{
+  min-width:0;
+  min-height:108px;
+  padding:14px 12px !important;
+  align-content:center;
+}
+.profile-meta-v2 b{
+  overflow-wrap:anywhere;
+}
+.projects-list-section{
+  margin-top:44px !important;
+}
+
+/* Desktop Reels: keep the entire vertical video visible. */
+@media(min-width:768px){
+  .video-reels-shell{
+    height:calc(100vh - 74px) !important;
+    min-height:620px;
+    background:#f3f3f1 !important;
+    padding:22px 28px 24px;
+    overflow:hidden;
+  }
+
+  .video-reels-scroll{
+    height:100% !important;
+    overflow-y:auto;
+    scroll-snap-type:y mandatory;
+  }
+
+  .video-reel-slide{
+    width:min(430px, calc((100vh - 122px) * 9 / 16));
+    height:min(calc(100vh - 122px), 760px) !important;
+    min-height:0 !important;
+    aspect-ratio:9/16;
+    margin:0 auto 22px;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 16px 48px rgba(0,0,0,.14);
+    scroll-snap-align:center;
+  }
+
+  .video-reel-slide video{
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+    background:#000;
+  }
+
+  .video-reel-info{
+    left:20px !important;
+    right:82px;
+    bottom:22px !important;
+    max-width:none !important;
+  }
+
+  .video-reel-info h1{
+    font-size:30px !important;
+    line-height:1 !important;
+    margin:7px 0 !important;
+  }
+
+  .video-reel-info p{
+    font-size:11px;
+    margin:0;
+  }
+
+  .video-reel-actions{
+    right:14px !important;
+    bottom:20px !important;
+  }
+
+  .video-reel-actions button{
+    width:48px !important;
+    height:52px !important;
+    border-radius:15px !important;
+  }
+
+  .reel-tap{
+    width:54px !important;
+    height:54px !important;
+  }
+}
+
+/* Tablet Projects */
+@media(max-width:1100px) and (min-width:768px){
+  .project-profile-main-v2{
+    grid-template-columns:96px minmax(0,1fr) !important;
+  }
+  .project-avatar-v2,
+  .project-avatar-v2 img{
+    width:96px !important;
+    height:96px !important;
+  }
+  .profile-meta-v2{
+    grid-column:1/-1;
+  }
+}
+
+/* Mobile Projects: compact profile, no negative offsets, no giant stacked stats. */
+@media(max-width:767px){
+  .project-profile-page{
+    padding-top:14px !important;
+  }
+
+  .project-profile-v2{
+    border-radius:22px !important;
+  }
+
+  .project-cover-v2{
+    aspect-ratio:16/10 !important;
+    min-height:0 !important;
+    max-height:none !important;
+  }
+
+  .project-badges{
+    top:10px !important;
+    left:10px !important;
+    right:10px !important;
+  }
+
+  .project-badges span{
+    font-size:8px !important;
+    padding:7px 9px !important;
+  }
+
+  .project-profile-main-v2{
+    padding:16px !important;
+    grid-template-columns:62px minmax(0,1fr) !important;
+    gap:12px !important;
+  }
+
+  .project-avatar-v2,
+  .project-avatar-v2 img{
+    width:62px !important;
+    height:62px !important;
+  }
+
+  .project-avatar-v2 img{
+    border-radius:18px !important;
+  }
+
+  .project-profile-copy-v2 h1{
+    font-size:24px !important;
+    line-height:1.08 !important;
+  }
+
+  .project-profile-copy-v2 h1 svg{
+    width:18px;
+    height:18px;
+  }
+
+  .project-profile-copy-v2 .blue-tagline{
+    font-size:11px;
+    margin:4px 0 !important;
+  }
+
+  .project-profile-description{
+    grid-column:1/-1;
+    font-size:11px !important;
+    line-height:1.65 !important;
+  }
+
+  .project-tags{
+    grid-column:1/-1;
+    margin-top:10px !important;
+  }
+
+  .project-tags span{
+    font-size:8px !important;
+    padding:6px 8px !important;
+  }
+
+  .profile-meta-v2{
+    grid-column:1/-1;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    gap:6px !important;
+    margin-top:3px;
+  }
+
+  .profile-meta-v2 div{
+    min-height:78px !important;
+    padding:10px 8px !important;
+    border-radius:13px !important;
+  }
+
+  .profile-meta-v2 svg{
+    width:16px !important;
+    height:16px !important;
+  }
+
+  .profile-meta-v2 b{
+    font-size:11px !important;
+  }
+
+  .profile-meta-v2 span{
+    font-size:7px !important;
+    line-height:1.25;
+  }
+
+  .projects-list-section{
+    margin-top:30px !important;
+  }
+}
+
+/* Keep mobile Reels fullscreen as originally intended. */
+@media(max-width:767px){
+  .video-reels-shell{
+    height:100dvh !important;
+    padding:0 !important;
+    background:#000 !important;
+  }
+
+  .video-reels-scroll{
+    height:100% !important;
+  }
+
+  .video-reel-slide{
+    width:100% !important;
+    height:100dvh !important;
+    aspect-ratio:auto !important;
+    margin:0 !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+  }
+
+  .video-reel-slide video{
+    width:100% !important;
+    height:100% !important;
+    object-fit:cover !important;
+  }
+}
