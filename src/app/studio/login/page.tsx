@@ -68,7 +68,7 @@ function LoginForm() {
         <button className="admin-login-button" disabled={!password || loading}>
           <LogIn /> {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ Studio"}
         </button>
-        <small>Build 07 · Reel Library Manager</small>
+        <small>Build 08 · Cover + Reel Manager</small>
       </form>
     </div>
   );

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, Camera, Clapperboard, GraduationCap, MapPin, Play, Sparkles } from "lucide-react";
 import MobileHomeReelHero from "@/components/MobileHomeReelHero";
+import HomeProfileCover from "@/components/HomeProfileCover";
 import { projects, services } from "@/lib/content";
 
 export default function Home() {
@@ -11,7 +12,9 @@ export default function Home() {
       <MobileHomeReelHero />
 
       <div className="light-page" id="home-content">
-        <section className="home-hero-light">
+        <HomeProfileCover defaultCover={featured.cover} />
+
+        <section className="home-hero-light home-hero-after-cover">
           <div className="hero-copy-light">
             <span className="light-kicker">LUNGNUAD PRODUCTION</span>
             <h1>Stories that move.<br />ภาพที่เล่าเรื่องแทนคุณ</h1>
@@ -22,7 +25,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hero-profile-card">
+          <div className="hero-profile-card compact-profile">
             <img src="/media/profile/lungnuad-profile.webp" alt="Lungnuad profile" />
             <div>
               <span>Photographer · Filmmaker</span>

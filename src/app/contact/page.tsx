@@ -1,4 +1,3 @@
-
 import { Mail, MessageCircle, MapPin } from "lucide-react";
 import { site } from "@/lib/content";
 
