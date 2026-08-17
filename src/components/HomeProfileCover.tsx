@@ -1,27 +1,13 @@
 "use client";
 
 import { Camera, Check, MapPin, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import type { CmsContent } from "@/lib/cms";
 
-export default function HomeProfileCover({ defaultCover }: { defaultCover: string }) {
-  const [coverUrl, setCoverUrl] = useState(defaultCover);
-
-  useEffect(() => {
-    fetch("/api/site-settings", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        const saved = data?.settings?.homeCoverUrl;
-        if (saved) setCoverUrl(saved);
-      })
-      .catch(() => {});
-  }, []);
-
+export default function HomeProfileCover({ cms }: { cms: CmsContent }) {
+  const h = cms.home;
   return (
     <section className="home-profile-cover">
-      <div
-        className="home-profile-cover-image"
-        style={{ backgroundImage: `url("${coverUrl}")` }}
-      >
+      <div className="home-profile-cover-image" style={{ backgroundImage: `url("${h.coverUrl}")` }}>
         <div className="home-profile-cover-shade" />
         <div className="home-cover-badges">
           <span><Camera /> Visual Production</span>
@@ -36,18 +22,18 @@ export default function HomeProfileCover({ defaultCover }: { defaultCover: strin
         </div>
 
         <div className="home-cover-about">
-          <span>Photographer · Filmmaker</span>
-          <h2>Lungnuad Production <em><Check /></em></h2>
-          <p>Video · Photo · Storytelling</p>
-          <small>งานภาพและวิดีโอที่เน้นความชัดเจนของเรื่องราว อารมณ์ และภาพลักษณ์ เพื่อให้คนดูเข้าใจสิ่งที่คุณอยากสื่อได้เร็วขึ้น</small>
+          <span>{h.profileRole}</span>
+          <h2>{h.profileName} <em><Check /></em></h2>
+          <p>{h.profileTagline}</p>
+          <small>{h.profileDescription}</small>
           <div className="home-cover-tags">
-            <span>Commercial</span><span>Education</span><span>Corporate</span><span>Events</span>
+            {h.profileTags.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
         </div>
 
         <div className="home-cover-stats">
-          <div><Sparkles /><b>15+</b><span>Years Experience</span></div>
-          <div><MapPin /><b>Thailand</b><span>Available Nationwide</span></div>
+          <div><Sparkles /><b>{h.experience}</b><span>Years Experience</span></div>
+          <div><MapPin /><b>{h.location}</b><span>Available Nationwide</span></div>
         </div>
       </div>
     </section>

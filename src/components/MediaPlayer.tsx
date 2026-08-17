@@ -1,6 +1,6 @@
 
 import { Play } from "lucide-react";
-import type { Project } from "@/lib/content";
+import type { Project } from "@/lib/cms";
 
 export default function MediaPlayer({ project }: { project: Project }) {
   const { video } = project;

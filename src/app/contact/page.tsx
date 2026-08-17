@@ -1,16 +1,20 @@
+"use client";
+
 import { Mail, MessageCircle, MapPin } from "lucide-react";
-import { site } from "@/lib/content";
+import { useCms } from "@/components/CmsProvider";
 
 export default function ContactPage() {
+  const { cms } = useCms();
+  const c = cms.contactPage;
   return (
     <div className="page-wrap narrow-page">
-      <span className="eyebrow">Get in touch</span>
-      <h1 className="display-title">มีเรื่องที่อยากเล่า? มาคุยกันครับ.</h1>
-      <p className="lead">สนใจผลิตสื่อโฆษณา วิดีโอ ภาพนิ่ง หรือสอบถามแพ็กเกจงานถ่ายทำ สามารถติดต่อเพื่อคุยโจทย์เบื้องต้นได้</p>
+      <span className="eyebrow">{c.eyebrow}</span>
+      <h1 className="display-title">{c.title}</h1>
+      <p className="lead">{c.description}</p>
       <div className="contact-list">
-        <a href={`mailto:${site.email}`}><Mail/><span>Email</span><b>{site.email}</b></a>
-        <a href={site.facebookUrl} target="_blank" rel="noreferrer"><MessageCircle/><span>Facebook Page</span><b>{site.facebookLabel}</b></a>
-        <div><MapPin/><span>พื้นที่ให้บริการ</span><b>{site.serviceArea}</b></div>
+        <a href={`mailto:${cms.site.email}`}><Mail/><span>Email</span><b>{cms.site.email}</b></a>
+        <a href={cms.site.facebookUrl} target="_blank" rel="noreferrer"><MessageCircle/><span>Facebook Page</span><b>{cms.site.facebookLabel}</b></a>
+        <div><MapPin/><span>พื้นที่ให้บริการ</span><b>{cms.site.serviceArea}</b></div>
       </div>
     </div>
   );

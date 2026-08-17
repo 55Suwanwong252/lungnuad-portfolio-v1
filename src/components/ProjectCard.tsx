@@ -1,7 +1,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Play } from "lucide-react";
-import { Project } from "@/lib/content";
+import { Project } from "@/lib/cms";
 
 export default function ProjectCard({
   project,

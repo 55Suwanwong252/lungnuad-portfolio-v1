@@ -3,19 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  House,
-  PlaySquare,
-  FolderKanban,
-  Images,
-  UserRound,
-  Mail,
-  Search,
-  Menu,
-  ShieldCheck,
+  House, PlaySquare, FolderKanban, Images, UserRound, Mail,
+  Search, Menu, ShieldCheck, MoreHorizontal, X
 } from "lucide-react";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { useCms } from "@/components/CmsProvider";
 
-const nav = [
+const desktopNav = [
   { href: "/", label: "Home", icon: House },
   { href: "/reels", label: "Reels", icon: PlaySquare },
   { href: "/projects", label: "Projects", icon: FolderKanban },
@@ -27,6 +21,16 @@ const nav = [
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const { cms } = useCms();
+
+  const labels = cms.navigation;
+  const mobileNav = [
+    { href: "/", label: labels.home, icon: House },
+    { href: "/reels", label: labels.reels, icon: PlaySquare },
+    { href: "/projects", label: labels.projects, icon: FolderKanban },
+    { href: "/gallery", label: labels.gallery, icon: Images },
+  ];
 
   return (
     <div className="site-shell">
@@ -37,18 +41,11 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         </Link>
 
         <nav className="sidebar-nav">
-          {nav.map((item) => {
+          {desktopNav.map((item) => {
             const Icon = item.icon;
-            const active =
-              item.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(item.href);
+            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
-              <Link
-                className={`nav-item ${active ? "active" : ""}`}
-                href={item.href}
-                key={item.href}
-              >
+              <Link className={`nav-item ${active ? "active" : ""}`} href={item.href} key={item.href}>
                 <Icon size={18} strokeWidth={1.8} />
                 <span>{item.label}</span>
               </Link>
@@ -79,39 +76,40 @@ export default function SiteShell({ children }: { children: ReactNode }) {
               <span className="brand-sub">PRODUCTION</span>
             </Link>
           </div>
-
           <div className="topbar-actions">
             <label className="search-box" aria-label="Search projects">
               <Search size={17} />
               <input placeholder="Search projects..." />
             </label>
-            <button className="icon-button" aria-label="Open menu">
-              <Menu size={20} />
-            </button>
+            <button className="icon-button" aria-label="Open menu"><Menu size={20} /></button>
           </div>
         </header>
-
         {children}
       </main>
 
-      <nav className="bottom-nav">
-        {nav.slice(0, 5).map((item) => {
+      {moreOpen && (
+        <div className="liquid-more-sheet">
+          <button className="liquid-more-close" onClick={() => setMoreOpen(false)}><X /></button>
+          <Link href="/about" onClick={() => setMoreOpen(false)}><UserRound />{labels.about}</Link>
+          <Link href="/contact" onClick={() => setMoreOpen(false)}><Mail />{labels.contact}</Link>
+        </div>
+      )}
+
+      <nav className="liquid-mobile-nav">
+        {mobileNav.map((item) => {
           const Icon = item.icon;
-          const active =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           return (
-            <Link
-              className={`bottom-nav-item ${active ? "active" : ""}`}
-              href={item.href}
-              key={item.href}
-            >
-              <Icon size={21} strokeWidth={1.9} />
+            <Link className={`liquid-nav-item ${active ? "active" : ""}`} href={item.href} key={item.href}>
+              <Icon />
               <span>{item.label}</span>
             </Link>
           );
         })}
+        <button className={`liquid-nav-item ${moreOpen ? "active" : ""}`} onClick={() => setMoreOpen(v => !v)}>
+          <MoreHorizontal />
+          <span>{labels.more}</span>
+        </button>
       </nav>
     </div>
   );

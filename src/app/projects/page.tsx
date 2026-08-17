@@ -1,24 +1,18 @@
+"use client";
+
 import Link from "next/link";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Clapperboard,
-  Eye,
-  Heart,
-  MapPin,
-} from "lucide-react";
-import { projects } from "@/lib/content";
+import { ArrowRight, CheckCircle2, Clapperboard, Eye, Heart, MapPin } from "lucide-react";
+import { useCms } from "@/components/CmsProvider";
 
 export default function ProjectsPage() {
-  const hero = projects[0];
+  const { cms } = useCms();
+  const hero = cms.projects[0];
+  const p = cms.projectsPage;
 
   return (
     <div className="light-page project-profile-page">
       <section className="project-profile-hero project-profile-v2">
-        <div
-          className="project-cover-photo project-cover-v2"
-          style={{ backgroundImage: `url(${hero.cover})` }}
-        >
+        <div className="project-cover-photo project-cover-v2" style={{ backgroundImage: `url(${p.coverUrl || hero?.cover})` }}>
           <div className="project-badges">
             <span><Clapperboard /> Visual Production</span>
             <span className="status-dot"><i />Available</span>
@@ -31,47 +25,26 @@ export default function ProjectsPage() {
           </div>
 
           <div className="project-profile-copy project-profile-copy-v2">
-            <h1>
-              Lungnuad Production
-              <CheckCircle2 />
-            </h1>
-            <p className="blue-tagline">Video · Photo · Storytelling</p>
-            <p className="project-profile-description">
-              งานภาพและวิดีโอที่เน้นความชัดเจนของเรื่องราว อารมณ์ และภาพลักษณ์
-              เพื่อให้คนดูเข้าใจสิ่งที่คุณอยากสื่อได้เร็วขึ้น
-            </p>
-            <div className="project-tags">
-              <span>Commercial</span>
-              <span>Education</span>
-              <span>Corporate</span>
-              <span>Events</span>
-            </div>
+            <h1>{p.profileName}<CheckCircle2 /></h1>
+            <p className="blue-tagline">{p.tagline}</p>
+            <p className="project-profile-description">{p.description}</p>
+            <div className="project-tags">{p.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
           </div>
 
           <div className="profile-meta profile-meta-v2">
-            <div><Eye /><b>{projects.length}</b><span>Projects</span></div>
-            <div><Heart /><b>15+</b><span>Years Experience</span></div>
-            <div><MapPin /><b>Thailand</b><span>Available Nationwide</span></div>
+            <div><Eye /><b>{cms.projects.length}</b><span>Projects</span></div>
+            <div><Heart /><b>{p.experience}</b><span>Years Experience</span></div>
+            <div><MapPin /><b>{p.location}</b><span>Available Nationwide</span></div>
           </div>
         </div>
       </section>
 
       <section className="clean-section projects-list-section">
-        <div className="section-head-light">
-          <div><span>PORTFOLIO</span><h2>Selected Projects</h2></div>
-        </div>
-
+        <div className="section-head-light"><div><span>PORTFOLIO</span><h2>{p.heading}</h2></div></div>
         <div className="project-clean-grid projects-three">
-          {projects.map((project) => (
-            <Link
-              className="project-clean-card"
-              href={`/projects/${project.slug}`}
-              key={project.slug}
-            >
-              <div
-                className="project-clean-img"
-                style={{ backgroundImage: `url(${project.cover})` }}
-              />
+          {cms.projects.map((project) => (
+            <Link className="project-clean-card" href={`/projects/${project.slug}`} key={project.slug}>
+              <div className="project-clean-img" style={{ backgroundImage: `url(${project.cover})` }} />
               <div className="project-clean-body">
                 <span>{project.category}</span>
                 <h3>{project.title}</h3>

@@ -1,58 +1,58 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, Play, Pause, Share2, Volume2, VolumeX } from "lucide-react";
+import { ChevronDown, Share2, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useCms } from "@/components/CmsProvider";
 
 type Reel = { url: string; title: string };
 
-const localFallback: Reel = {
-  url: "/media/reels/reel-01.mp4",
-  title: "Reel 01",
-};
+const fallback: Reel = { url: "/media/reels/reel-01.mp4", title: "Reel 01" };
 
 export default function MobileHomeReelHero() {
+  const { cms } = useCms();
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [reel, setReel] = useState<Reel>(localFallback);
+  const [reels, setReels] = useState<Reel[]>([fallback]);
   const [muted, setMuted] = useState(true);
-  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    fetch("/api/reels")
+    fetch("/api/reels", { cache: "no-store" })
       .then((response) => response.json())
       .then((data) => {
-        if (data?.reels?.length) setReel(data.reels[0]);
+        if (data?.reels?.length) setReels(data.reels);
       })
       .catch(() => {});
   }, []);
+
+  const selected =
+    reels.find((item) => item.url === cms.homeReel.selectedUrl) ||
+    reels[0] ||
+    fallback;
+
+  const meta = cms.reelMeta[selected.url] || {};
+  const reelTitle = cms.homeReel.title || meta.title || selected.title;
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     video.muted = muted;
     video.volume = 1;
-
-    if (!paused) video.play().catch(() => {});
-    else video.pause();
-  }, [muted, paused, reel.url]);
+    video.play().catch(() => {});
+  }, [muted, selected.url]);
 
   function toggleSound() {
     const video = videoRef.current;
     if (!video) return;
-
     const nextMuted = !video.muted;
     video.muted = nextMuted;
     video.volume = 1;
     setMuted(nextMuted);
-
-    // This call is inside the user's tap, so iOS is allowed to start audio.
     video.play().catch(() => {});
-    setPaused(false);
   }
 
   async function share() {
     if (navigator.share) {
-      await navigator.share({ title: reel.title, url: window.location.href });
+      await navigator.share({ title: reelTitle, url: window.location.href });
     } else {
       await navigator.clipboard.writeText(window.location.href);
     }
@@ -62,49 +62,49 @@ export default function MobileHomeReelHero() {
     document.getElementById("home-content")?.scrollIntoView({ behavior: "smooth" });
   }
 
+  const toneClass = cms.homeReel.textColor === "dark" ? "is-dark-text" : "is-light-text";
+  const alignClass = cms.homeReel.textAlign === "center" ? "is-center" : "is-left";
+  const sizeClass = `text-${cms.homeReel.textSize || "large"}`;
+
   return (
-    <section className="mobile-home-reel">
+    <section className={`mobile-home-reel ${toneClass}`}>
       <video
         ref={videoRef}
-        key={reel.url}
-        src={reel.url}
+        key={selected.url}
+        src={selected.url}
         autoPlay
         loop
         muted={muted}
         playsInline
         preload="auto"
       />
-      <div className="mobile-home-reel-shade" />
+      <div className="mobile-home-reel-shade" style={{ opacity: cms.homeReel.overlayOpacity }} />
 
-      <button
-        className="mobile-home-reel-tap"
-        onClick={() => setPaused((value) => !value)}
-        aria-label={paused ? "Play" : "Pause"}
-      >
-        {paused ? <Play fill="currentColor" /> : <Pause fill="currentColor" />}
-      </button>
-
-      <div className="mobile-home-reel-copy">
-        <span>LUNGNUAD · FEATURED REEL</span>
-        <h1>{reel.title}</h1>
-        <p>Visual Story · เลื่อนลงเพื่อดู Portfolio</p>
-        <Link href="/reels">ดู Reels ทั้งหมด</Link>
+      <div className={`mobile-home-reel-copy ${alignClass} ${sizeClass}`}>
+        <span>{cms.homeReel.eyebrow}</span>
+        <h1>{reelTitle}</h1>
+        <p>{cms.homeReel.caption}</p>
+        {cms.homeReel.showCta && <Link href="/reels">{cms.homeReel.ctaLabel}</Link>}
       </div>
 
       <div className="mobile-home-reel-actions">
-        <button onClick={toggleSound}>
-          {muted ? <VolumeX /> : <Volume2 />}
-          <small>{muted ? "Sound" : "Mute"}</small>
-        </button>
-        <button onClick={share}>
-          <Share2 />
-          <small>Share</small>
-        </button>
+        {cms.homeReel.showSound && (
+          <button onClick={toggleSound}>
+            {muted ? <VolumeX /> : <Volume2 />}
+            <small>{muted ? "Sound" : "Mute"}</small>
+          </button>
+        )}
+        {cms.homeReel.showShare && (
+          <button onClick={share}>
+            <Share2 />
+            <small>Share</small>
+          </button>
+        )}
       </div>
 
       <button className="mobile-home-scroll" onClick={scrollToHome}>
         <ChevronDown />
-        <span>Portfolio</span>
+        <span>{cms.homeReel.scrollLabel}</span>
       </button>
     </section>
   );
