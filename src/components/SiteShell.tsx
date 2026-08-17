@@ -11,6 +11,7 @@ import {
   Mail,
   Search,
   Menu,
+  ShieldCheck,
 } from "lucide-react";
 import { ReactNode } from "react";
 
@@ -21,6 +22,7 @@ const nav = [
   { href: "/gallery", label: "Gallery", icon: Images },
   { href: "/about", label: "About", icon: UserRound },
   { href: "/contact", label: "Contact", icon: Mail },
+  { href: "/studio", label: "Admin", icon: ShieldCheck },
 ];
 
 export default function SiteShell({ children }: { children: ReactNode }) {

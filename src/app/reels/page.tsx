@@ -1,84 +1,24 @@
-
 "use client";
-
 import Link from "next/link";
-import { ArrowUpRight, ChevronDown, ChevronUp, Pause, Play, Share2, Volume2, VolumeX } from "lucide-react";
-import { projects } from "@/lib/content";
+import { ArrowUpRight, Pause, Play, Share2, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export default function ReelsPage() {
-  const scroller = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const [muted, setMuted] = useState(true);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    const root = scroller.current;
-    if (!root) return;
-    const slides = Array.from(root.querySelectorAll<HTMLElement>(".reel-slide"));
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > .6) {
-          const index = slides.indexOf(entry.target as HTMLElement);
-          if (index >= 0) { setActive(index); setPaused(false); }
-        }
-      });
-    }, { root, threshold: [.6, .8] });
-    slides.forEach((slide) => observer.observe(slide));
-    return () => observer.disconnect();
-  }, []);
-
-  const go = (dir: number) => {
-    const next = Math.max(0, Math.min(projects.length - 1, active + dir));
-    scroller.current?.querySelectorAll<HTMLElement>(".reel-slide")[next]?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const share = async () => {
-    const p = projects[active];
-    const url = `${window.location.origin}/projects/${p.slug}`;
-    if (navigator.share) await navigator.share({ title: p.title, text: p.subtitle, url });
-    else { await navigator.clipboard.writeText(url); alert("คัดลอกลิงก์ Project แล้ว"); }
-  };
-
-  return (
-    <div className="reels-page">
-      <div className="reels-topbar">
-        <div><strong>REELS</strong><span>Swipe / scroll to explore</span></div>
-        <div className="reels-counter">{String(active+1).padStart(2,"0")} / {String(projects.length).padStart(2,"0")}</div>
-      </div>
-
-      <div className="reels-scroller" ref={scroller}>
-        {projects.map((project, index) => (
-          <section className={`reel-slide ${index===active ? "is-active":""}`} key={project.slug}>
-            <div className={`reel-background ${paused && index===active ? "is-paused":""}`} style={{ backgroundImage: `url("${project.vertical}")` }} />
-            <div className="reel-overlay" />
-            <button className="reel-center-toggle" onClick={()=>setPaused(v=>!v)} aria-label="Play or pause">
-              {paused && index===active ? <Play fill="currentColor"/> : <Pause fill="currentColor"/>}
-            </button>
-
-            <div className="reel-copy">
-              <span className="reel-kicker">{project.category}</span>
-              <h1>{project.title}</h1>
-              <p>{project.subtitle}</p>
-              <div className="reel-tags">{project.tags.map(tag=><span key={tag}>#{tag.replace(/\s+/g,"")}</span>)}</div>
-              <Link href={`/projects/${project.slug}`} className="reel-project-link">View full project <ArrowUpRight size={16}/></Link>
-            </div>
-
-            <div className="reel-actions">
-              <button onClick={()=>setPaused(v=>!v)} aria-label="Play pause">{paused && index===active ? <Play/>:<Pause/>}<small>{paused && index===active?"Play":"Pause"}</small></button>
-              <button onClick={()=>setMuted(v=>!v)} aria-label="Mute">{muted?<VolumeX/>:<Volume2/>}<small>{muted?"Muted":"Sound"}</small></button>
-              <button onClick={share} aria-label="Share"><Share2/><small>Share</small></button>
-            </div>
-
-            <div className="reel-progress"><i style={{width:index===active && !paused ? "72%" : index<active ? "100%" : "0%"}} /></div>
-          </section>
-        ))}
-      </div>
-
-      <div className="reel-nav">
-        <button onClick={()=>go(-1)} disabled={active===0}><ChevronUp/></button>
-        <button onClick={()=>go(1)} disabled={active===projects.length-1}><ChevronDown/></button>
-      </div>
-    </div>
-  );
+type Reel={url:string;title:string;projectSlug?:string};
+const fallback:Reel[]=[
+ {url:"/media/reels/reel-01.mp4",title:"Reel 01"},
+ {url:"/media/reels/reel-02.mp4",title:"Reel 02"},
+ {url:"/media/reels/reel-03.mp4",title:"Reel 03"},
+];
+export default function ReelsPage(){
+ const [reels,setReels]=useState<Reel[]>(fallback),[active,setActive]=useState(0),[muted,setMuted]=useState(true),[paused,setPaused]=useState(false); const refs=useRef<(HTMLVideoElement|null)[]>([]);
+ useEffect(()=>{fetch('/api/reels').then(r=>r.ok?r.json():null).then(d=>{if(d?.reels?.length)setReels(d.reels)}).catch(()=>{})},[])
+ useEffect(()=>{refs.current.forEach((v,i)=>{if(!v)return;v.muted=muted;if(i===active&&!paused)v.play().catch(()=>{});else v.pause();})},[active,paused,muted,reels.length])
+ useEffect(()=>{const els=document.querySelectorAll('.video-reel-slide');const ob=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting&&e.intersectionRatio>.65){const i=[...els].indexOf(e.target);if(i>=0){setActive(i);setPaused(false)}}}),{threshold:[.65]});els.forEach(e=>ob.observe(e));return()=>ob.disconnect()},[reels.length])
+ const share=async()=>{const url=location.href;if(navigator.share) await navigator.share({title:reels[active]?.title,url}); else navigator.clipboard.writeText(url)};
+ return <div className="video-reels-shell"><div className="video-reels-scroll">{reels.map((r,i)=><section className="video-reel-slide" key={r.url}>
+   <video ref={el=>{refs.current[i]=el}} src={r.url} loop playsInline muted={muted} preload={i<2?"auto":"metadata"}/><div className="video-reel-shade"/>
+   <button className="reel-tap" onClick={()=>setPaused(v=>!v)}>{paused&&i===active?<Play fill="currentColor"/>:<Pause fill="currentColor"/>}</button>
+   <div className="video-reel-info"><span>LUNGNUAD · REEL {String(i+1).padStart(2,'0')}</span><h1>{r.title}</h1><p>Visual story · Swipe up for next reel</p>{r.projectSlug&&<Link href={`/projects/${r.projectSlug}`}>View project <ArrowUpRight/></Link>}</div>
+   <div className="video-reel-actions"><button onClick={()=>setMuted(v=>!v)}>{muted?<VolumeX/>:<Volume2/>}<small>{muted?'Sound':'Mute'}</small></button><button onClick={share}><Share2/><small>Share</small></button></div>
+  </section>)}</div></div>
 }

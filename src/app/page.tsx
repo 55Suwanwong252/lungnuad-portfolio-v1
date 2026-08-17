@@ -1,67 +1,20 @@
-
 import Link from "next/link";
-import { ArrowRight, Play, Sparkles, Clapperboard, HeartHandshake, Building2, GraduationCap } from "lucide-react";
-import ProjectCard from "@/components/ProjectCard";
-import { projects } from "@/lib/content";
-import { reviews, services } from "@/lib/content";
+import { ArrowRight, Camera, Clapperboard, GraduationCap, MapPin, Play, Sparkles } from "lucide-react";
+import MobileReelRedirect from "@/components/MobileReelRedirect";
+import { projects, services } from "@/lib/content";
 
-const serviceIcons = [Clapperboard, HeartHandshake, Building2, GraduationCap];
-
-export default function Home() {
-  const featured = projects[0];
-  const side = projects.slice(4, 6);
-
-  return (
-    <div className="page-wrap">
-      <section className="page-heading">
-        <div>
-          <span className="eyebrow">Lung Nuad Production / Portfolio</span>
-          <h1>Stories that move.</h1>
-          <p>งานวิดีโอ ภาพนิ่ง โฆษณา พรีเซนเทชั่น การศึกษา งานอีเวนต์ และเรื่องราวที่ออกแบบให้ดูง่ายในประสบการณ์แบบ Feed + Reels + Project.</p>
-        </div>
-        <Link className="text-link" href="/projects">ดูผลงานทั้งหมด <ArrowRight size={18}/></Link>
-      </section>
-
-      <section className="filter-row">
-        {["ทั้งหมด","Commercial","Presentation","Education","PR / Event"].map((x,i)=><button className={`pill ${i===0?"active":""}`} key={x}>{x}</button>)}
-      </section>
-
-      <section className="home-grid">
-        <ProjectCard project={featured} featured />
-        <div className="side-stack">{side.map(p=><ProjectCard project={p} key={p.slug}/>)}</div>
-      </section>
-
-      <section className="section-block">
-        <div className="section-title"><div><span className="eyebrow">Featured commercials</span><h2>งานโฆษณาแนะนำ</h2></div><Sparkles size={22}/></div>
-        <div className="card-grid">{projects.slice(0,4).map(p=><ProjectCard project={p} key={p.slug}/>)}</div>
-      </section>
-
-      <section className="section-block">
-        <div className="section-title"><div><span className="eyebrow">What we do</span><h2>บริการผลิตสื่อ</h2></div></div>
-        <div className="services-grid">
-          {services.map((s,i)=>{ const Icon=serviceIcons[i]; return <div className="service-card" key={s.title}><Icon/><span>0{i+1}</span><h3>{s.title}</h3><p>{s.text}</p></div>})}
-        </div>
-      </section>
-
-      <section className="section-block">
-        <div className="section-title"><div><span className="eyebrow">Portfolio work</span><h2>โปรเจคจริงจากผลงานเดิม</h2></div><Link className="text-link" href="/projects">Explore <ArrowRight size={18}/></Link></div>
-        <div className="card-grid">{projects.slice(4,10).map(p=><ProjectCard project={p} key={p.slug}/>)}</div>
-      </section>
-
-      <section className="studio-panel">
-        <div><span className="eyebrow">Production capability</span><h2>ครบตั้งแต่แนวคิด จนถึง Final Cut.</h2></div>
-        <div className="studio-points"><span>Studio & Lighting</span><span>Professional Editing</span><span>Recording Room</span><span>Budget Planning</span></div>
-      </section>
-
-      <section className="section-block">
-        <div className="section-title"><div><span className="eyebrow">Client reviews</span><h2>ความประทับใจจากลูกค้า</h2></div></div>
-        <div className="reviews-grid">{reviews.map(r=><article className="review-card" key={r.name}><p>“{r.quote}”</p><div><b>{r.name}</b><span>{r.role}</span></div></article>)}</div>
-      </section>
-
-      <section className="reels-banner">
-        <div><span className="eyebrow">Mobile first</span><h2>ดูผลงานต่อแบบ Reels.</h2><p>ปัดขึ้นลงเพื่อดูงานต่อเนื่อง แล้วแตะเข้า Project เพื่อดูรายละเอียดของงานนั้น</p></div>
-        <Link className="primary-button" href="/reels"><Play size={18} fill="currentColor"/>Open Reels</Link>
-      </section>
-    </div>
-  );
+export default function Home(){
+ const featured=projects[0];
+ return <div className="light-page"><MobileReelRedirect/>
+  <section className="home-hero-light">
+   <div className="hero-copy-light"><span className="light-kicker">LUNGNUAD PRODUCTION</span><h1>Stories that move.<br/>ภาพที่เล่าเรื่องแทนคุณ</h1><p>Video production, photography และ visual storytelling สำหรับแบรนด์ องค์กร การศึกษา และงานพิเศษ</p><div className="hero-actions"><Link href="/projects" className="dark-cta">ดูผลงาน <ArrowRight/></Link><Link href="/reels" className="ghost-cta"><Play fill="currentColor"/>ดู Reels</Link></div></div>
+   <div className="hero-profile-card"><img src="/media/profile/lungnuad-profile.webp" alt="Lungnuad profile"/><div><span>Photographer · Filmmaker</span><h2>Lungnuad</h2><p>นครศรีธรรมราช · Thailand</p></div></div>
+  </section>
+  <section className="clean-section"><div className="section-head-light"><div><span>SELECTED WORK</span><h2>โปรเจคที่อยากให้คุณเริ่มดู</h2></div><Link href="/projects">View all <ArrowRight/></Link></div>
+   <div className="feature-story-card" style={{backgroundImage:`url(${featured.cover})`}}><div className="feature-story-overlay"/><div className="feature-story-copy"><span>{featured.category}</span><h3>{featured.title}</h3><p>{featured.subtitle}</p><Link href={`/projects/${featured.slug}`}>เปิดโปรเจค <ArrowRight/></Link></div></div>
+  </section>
+  <section className="clean-section"><div className="section-head-light"><div><span>WHAT I DO</span><h2>บริการหลัก</h2></div></div><div className="service-clean-grid">{services.map((s,i)=><article key={s.title}><div className="service-icon">{i===0?<Clapperboard/>:i===1?<Camera/>:i===2?<Sparkles/>:<GraduationCap/>}</div><h3>{s.title}</h3><p>{s.text}</p></article>)}</div></section>
+  <section className="clean-section"><div className="section-head-light"><div><span>EXPLORE</span><h2>งานล่าสุด</h2></div></div><div className="project-clean-grid">{projects.slice(0,6).map(p=><Link className="project-clean-card" href={`/projects/${p.slug}`} key={p.slug}><div className="project-clean-img" style={{backgroundImage:`url(${p.cover})`}}/><div className="project-clean-body"><span>{p.category}</span><h3>{p.title}</h3><p>{p.subtitle}</p><ArrowRight/></div></Link>)}</div></section>
+  <section className="clean-contact"><div><MapPin/><span>Based in Southern Thailand · Available nationwide</span></div><Link href="/contact">Start a project <ArrowRight/></Link></section>
+ </div>
 }
