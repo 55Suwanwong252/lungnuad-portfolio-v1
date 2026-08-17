@@ -5,7 +5,7 @@ import { ArrowUpRight, Share2, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useCms } from "@/components/CmsProvider";
 
-type Reel = { url: string; title: string; projectSlug?: string };
+type Reel = { url: string; title: string; projectSlug?: string; source?: "local" | "blob" | string };
 
 const fallback: Reel[] = [
   { url: "/media/reels/reel-01.mp4", title: "Reel 01" },
@@ -24,8 +24,7 @@ export default function ReelsPage() {
     fetch("/api/reels", { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
-        if (data?.source === "blob") setRawReels(data.reels || []);
-        else if (data?.reels?.length) setRawReels(data.reels);
+        if (data?.reels?.length) setRawReels(data.reels);
       })
       .catch(() => {});
   }, []);
@@ -67,14 +66,24 @@ export default function ReelsPage() {
     return () => observer.disconnect();
   }, [ordered.length]);
 
-  function toggleSound() {
+  async function toggleSound() {
     const video = refs.current[active];
     if (!video) return;
-    const nextMuted = !video.muted;
-    video.muted = nextMuted;
-    video.volume = 1;
-    setMuted(nextMuted);
-    video.play().catch(() => {});
+    try {
+      if (video.muted) {
+        video.muted = false;
+        video.defaultMuted = false;
+        video.volume = 1;
+        await video.play();
+        setMuted(false);
+      } else {
+        video.muted = true;
+        video.defaultMuted = true;
+        setMuted(true);
+      }
+    } catch {
+      setMuted(video.muted);
+    }
   }
 
   const share = async () => {

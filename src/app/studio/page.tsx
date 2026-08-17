@@ -9,7 +9,7 @@ import {
 import { useEffect, useMemo, useState, type Dispatch, type ReactNode, type SetStateAction } from "react";
 import { defaultCms, type CmsContent, type Project } from "@/lib/cms";
 
-type Reel = { url: string; pathname?: string; title: string; source?: string };
+type Reel = { url: string; pathname?: string; title: string; source?: "local" | "blob" | string };
 type Tab = "home" | "projects" | "reels" | "gallery" | "about" | "contact" | "global";
 
 const tabs: { id: Tab; label: string; icon: typeof Home }[] = [
@@ -154,7 +154,7 @@ export default function Studio() {
   };
 
   const deleteReel = async (reel: Reel) => {
-    if (reelSource === "fallback" || reel.source === "local") return;
+    if (reel.source === "local") return;
     if (!confirm(`ลบ ${reel.title}?`)) return;
     const response = await fetch("/api/studio/delete-reel", {
       method: "DELETE", headers: { "Content-Type": "application/json" },
@@ -323,7 +323,7 @@ export default function Studio() {
                     <article key={reel.url} className={selected ? "home-selected" : ""}>
                       <video src={reel.url} muted playsInline preload="metadata" />
                       <div className="cms-reel-edit">
-                        <div className="cms-reel-title-row"><b>{meta.title || reel.title}</b>{selected && <span><Check />Show on Home</span>}</div>
+                        <div className="cms-reel-title-row"><b>{meta.title || reel.title}</b><div className="cms-source-badges"><span className={`source-${reel.source || "unknown"}`}>{(reel.source || "unknown").toUpperCase()}</span>{selected && <span><Check />Show on Home</span>}</div></div>
                         <input placeholder="Title" value={meta.title || ""} onChange={(e)=>setDraft(prev=>({...prev,reelMeta:{...prev.reelMeta,[reel.url]:{...meta,title:e.target.value}}}))}/>
                         <textarea placeholder="Caption" value={meta.caption || ""} onChange={(e)=>setDraft(prev=>({...prev,reelMeta:{...prev.reelMeta,[reel.url]:{...meta,caption:e.target.value}}}))}/>
                         <div className="cms-reel-buttons">
@@ -331,7 +331,7 @@ export default function Studio() {
                           <button onClick={()=>moveReel(reel.url,-1)}><ChevronUp /></button>
                           <button onClick={()=>moveReel(reel.url,1)}><ChevronDown /></button>
                           <a href={reel.url} target="_blank" rel="noreferrer"><ExternalLink /></a>
-                          <button className="danger" disabled={reelSource==="fallback"} onClick={()=>deleteReel(reel)}><Trash2 /></button>
+                          <button className="danger" disabled={reel.source==="local"} onClick={()=>deleteReel(reel)}><Trash2 /></button>
                         </div>
                       </div>
                     </article>
