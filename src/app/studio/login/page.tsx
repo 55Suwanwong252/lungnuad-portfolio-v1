@@ -1,30 +1,27 @@
 "use client";
 
 import { FormEvent, Suspense, useState } from "react";
+import { LockKeyhole, LogIn, ShieldCheck } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const next = searchParams.get("next") || "/studio";
 
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     setLoading(true);
     setError("");
 
     try {
       const response = await fetch("/api/studio/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ password }),
       });
 
@@ -43,35 +40,37 @@ function LoginForm() {
   }
 
   return (
-    <main className="studio-login-page">
-      <section className="studio-login-card">
-        <span className="eyebrow">LUNGNUAD PRODUCTION</span>
-
+    <div className="admin-login-page">
+      <form className="admin-login-card" onSubmit={submit}>
+        <div className="admin-login-icon"><ShieldCheck /></div>
+        <span className="eyebrow">PRIVATE STUDIO</span>
         <h1>Admin Login</h1>
+        <p>เข้าสู่ Content Studio เพื่อจัดการ Reel และ Media ของเว็บไซต์</p>
 
-        <p>เข้าสู่ Content Studio เพื่อจัดการ Reels และเนื้อหาเว็บไซต์</p>
-
-        <form onSubmit={handleSubmit}>
-          <label>
-            Password
+        <label>
+          <span>Password</span>
+          <div className="admin-password-field">
+            <LockKeyhole />
             <input
               type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              placeholder="Enter password"
               autoFocus
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
               required
             />
-          </label>
+          </div>
+        </label>
 
-          {error && <div className="studio-login-error">{error}</div>}
+        {error && <div className="admin-login-error">{error}</div>}
 
-          <button type="submit" disabled={loading}>
-            {loading ? "กำลังเข้าสู่ระบบ..." : "Login"}
-          </button>
-        </form>
-      </section>
-    </main>
+        <button className="admin-login-button" disabled={!password || loading}>
+          <LogIn /> {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ Studio"}
+        </button>
+        <small>Build 07 · Reel Library Manager</small>
+      </form>
+    </div>
   );
 }
 
@@ -79,11 +78,9 @@ export default function StudioLoginPage() {
   return (
     <Suspense
       fallback={
-        <main className="studio-login-page">
-          <section className="studio-login-card">
-            <p>Loading...</p>
-          </section>
-        </main>
+        <div className="admin-login-page">
+          <div className="admin-login-card"><p>Loading...</p></div>
+        </div>
       }
     >
       <LoginForm />

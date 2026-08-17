@@ -1,5 +1,40 @@
 import { NextResponse } from "next/server";
-export const runtime="nodejs";
-export async function POST(req:Request){
- try{const form=await req.formData();const file=form.get('file');const title=String(form.get('title')||'reel');if(!(file instanceof File))return NextResponse.json({error:'No file'},{status:400});
- const { put }=await import('@vercel/blob');const safe=title.toLowerCase().replace(/[^a-z0-9ก-๙]+/gi,'-').replace(/^-|-$/g,'')||'reel';const blob=await put(`reels/${Date.now()}-${safe}.${file.name.split('.').pop()||'mp4'}`,file,{access:'public',addRandomSuffix:false});return NextResponse.json(blob)}catch(e){return NextResponse.json({error:e instanceof Error?e.message:'Upload failed'},{status:500})}}
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
+
+export const runtime = "nodejs";
+
+export async function POST(request: Request) {
+  try {
+    const body = (await request.json()) as HandleUploadBody;
+
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname, clientPayload) => {
+        const payload = clientPayload ? JSON.parse(clientPayload) : {};
+        const title = String(payload.title || "reel");
+
+        return {
+          allowedContentTypes: [
+            "video/mp4",
+            "video/quicktime",
+            "video/webm",
+            "video/x-m4v",
+          ],
+          addRandomSuffix: true,
+          tokenPayload: JSON.stringify({ title }),
+        };
+      },
+      onUploadCompleted: async () => {
+        // The file is now in Vercel Blob. /api/reels reads it automatically.
+      },
+    });
+
+    return NextResponse.json(jsonResponse);
+  } catch (error) {
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Upload failed" },
+      { status: 500 },
+    );
+  }
+}
