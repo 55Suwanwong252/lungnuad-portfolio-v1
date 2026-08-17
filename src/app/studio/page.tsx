@@ -36,6 +36,7 @@ export default function Studio() {
   const [reelTitle, setReelTitle] = useState("");
   const [uploadingReel, setUploadingReel] = useState(false);
   const [mediaBusy, setMediaBusy] = useState("");
+  const [previewReelUrl, setPreviewReelUrl] = useState("");
 
   const dirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(saved), [draft, saved]);
 
@@ -321,7 +322,48 @@ export default function Studio() {
                   const selected = draft.homeReel.selectedUrl === reel.url;
                   return (
                     <article key={reel.url} className={selected ? "home-selected" : ""}>
-                      <video src={reel.url} muted playsInline preload="metadata" />
+                      <video
+                        src={`${reel.url}#t=0.8`}
+                        muted
+                        playsInline
+                        preload="auto"
+                        aria-label={`Preview ${meta.title || reel.title}`}
+                        onLoadedMetadata={(e) => {
+                          const video = e.currentTarget;
+                          video.muted = true;
+                          video.defaultMuted = true;
+                          video.volume = 0;
+                          if (Number.isFinite(video.duration) && video.duration > 0) {
+                            const target = Math.min(0.8, Math.max(0, video.duration - 0.08));
+                            if (Math.abs(video.currentTime - target) > 0.05) video.currentTime = target;
+                          }
+                        }}
+                        onLoadedData={(e) => {
+                          const video = e.currentTarget;
+                          video.pause();
+                          video.muted = true;
+                        }}
+                        onCanPlay={(e) => {
+                          const video = e.currentTarget;
+                          if (video.currentTime < 0.05 && Number.isFinite(video.duration) && video.duration > 0) {
+                            video.currentTime = Math.min(0.8, Math.max(0, video.duration - 0.08));
+                          }
+                        }}
+                        onMouseEnter={(e) => {
+                          const video = e.currentTarget;
+                          video.muted = true;
+                          video.volume = 0;
+                          void video.play().catch(() => undefined);
+                        }}
+                        onMouseLeave={(e) => {
+                          const video = e.currentTarget;
+                          video.pause();
+                          if (Number.isFinite(video.duration) && video.duration > 0) {
+                            video.currentTime = Math.min(0.8, Math.max(0, video.duration - 0.08));
+                          }
+                        }}
+                        onClick={() => setPreviewReelUrl(reel.url)}
+                      />
                       <div className="cms-reel-edit">
                         <div className="cms-reel-title-row"><b>{meta.title || reel.title}</b><div className="cms-source-badges"><span className={`source-${reel.source || "unknown"}`}>{(reel.source || "unknown").toUpperCase()}</span>{selected && <span><Check />Show on Home</span>}</div></div>
                         <input placeholder="Title" value={meta.title || ""} onChange={(e)=>setDraft(prev=>({...prev,reelMeta:{...prev.reelMeta,[reel.url]:{...meta,title:e.target.value}}}))}/>
@@ -403,7 +445,7 @@ export default function Studio() {
 
         <aside className="cms-preview">
           <div className="cms-preview-head"><div><span>LIVE PREVIEW</span><b>{tab.toUpperCase()}</b></div><span>{dirty ? "Unsaved changes" : "Saved"}</span></div>
-          <LivePreview tab={tab} cms={draft} project={currentProject} gallery={currentGallery} reels={reels} />
+          <LivePreview tab={tab} cms={draft} project={currentProject} gallery={currentGallery} reels={reels} previewReelUrl={previewReelUrl} />
         </aside>
       </div>
     </div>
@@ -439,7 +481,7 @@ function patchStat(setDraft:Dispatch<SetStateAction<CmsContent>>,index:number,pa
   setDraft(prev=>{const next=structuredClone(prev); next.aboutPage.stats[index]={...next.aboutPage.stats[index],...patch}; return next;});
 }
 
-function LivePreview({tab,cms,project,gallery,reels}:{tab:Tab;cms:CmsContent;project?:Project;gallery?:CmsContent["galleryPage"]["items"][number];reels:Reel[]}) {
+function LivePreview({tab,cms,project,gallery,reels,previewReelUrl}:{tab:Tab;cms:CmsContent;project?:Project;gallery?:CmsContent["galleryPage"]["items"][number];reels:Reel[];previewReelUrl?:string}) {
   if(tab==="home") return <div className="preview-home">
     <div className="preview-cover" style={{backgroundImage:`url("${cms.home.coverUrl}")`}} />
     <div className="preview-profile"><img src="/media/profile/lungnuad-profile.webp"/><div><small>{cms.home.profileRole}</small><h2>{cms.home.profileName}</h2><b>{cms.home.profileTagline}</b><p>{cms.home.profileDescription}</p></div></div>
@@ -453,7 +495,7 @@ function LivePreview({tab,cms,project,gallery,reels}:{tab:Tab;cms:CmsContent;pro
   </div>;
 
   if(tab==="reels") {
-    const selected=reels.find(r=>r.url===cms.homeReel.selectedUrl)||reels[0];
+    const selected=reels.find(r=>r.url===previewReelUrl)||reels.find(r=>r.url===cms.homeReel.selectedUrl)||reels[0];
     const meta=selected ? cms.reelMeta[selected.url] : undefined;
     return <div className="preview-phone">{selected ? <><video src={selected.url} autoPlay loop muted playsInline/><div className="preview-reel-overlay" style={{opacity:cms.homeReel.overlayOpacity}}/><div className={`preview-reel-copy ${cms.homeReel.textAlign}`}><span>{cms.homeReel.eyebrow}</span><h2>{cms.homeReel.title||meta?.title||selected.title}</h2><p>{cms.homeReel.caption}</p>{cms.homeReel.showCta&&<b>{cms.homeReel.ctaLabel}</b>}</div></>:<p>No reel</p>}</div>;
   }

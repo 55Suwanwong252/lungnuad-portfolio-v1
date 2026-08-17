@@ -1085,7 +1085,7 @@ h1, h2, h3 { line-height: 1.16; }
   border:1px solid #e2e3de;border-radius:15px;background:#fafaf8
 }
 .cms-reel-library article.home-selected{border-color:#90b8e8;box-shadow:0 0 0 2px rgba(60,130,220,.08)}
-.cms-reel-library video{width:106px;aspect-ratio:9/16;object-fit:cover;border-radius:11px;background:#000}
+.cms-reel-library video{width:106px;aspect-ratio:9/16;object-fit:cover;border-radius:11px;background:#000;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease;display:block}.cms-reel-library video:hover{transform:scale(1.015);box-shadow:0 8px 22px rgba(0,0,0,.14)}
 .cms-reel-edit{display:grid;gap:6px;min-width:0}
 .cms-reel-edit input,.cms-reel-edit textarea{
   width:100%;border:1px solid #dedfda;border-radius:9px;padding:8px;font-size:9px;background:#fff
@@ -1311,3 +1311,12 @@ h1, h2, h3 { line-height: 1.16; }
 .cms-source-badges>span{display:inline-flex;align-items:center;gap:3px;padding:4px 6px;border-radius:999px;font-size:7px;font-weight:800;letter-spacing:.06em}
 .cms-source-badges .source-local{background:#f1f1ed;color:#62676c}
 .cms-source-badges .source-blob{background:#fff1dd;color:#9a5b00}
+
+/* BUILD 10.2.1 — reliable Reel Library frame preview */
+.cms-reel-library video{
+  background:
+    linear-gradient(135deg,#15181c,#2a2d31);
+}
+.cms-reel-library video:not([src=""]){
+  cursor:pointer;
+}
