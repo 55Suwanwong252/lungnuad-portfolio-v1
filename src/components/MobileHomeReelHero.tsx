@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronDown, Play, Share2, Volume2, VolumeX } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type MouseEvent as ReactMouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useCms } from "@/components/CmsProvider";
 
 type Reel = { url: string; title: string; source?: "local" | "blob" | string };
@@ -12,6 +12,7 @@ const fallback: Reel = { url: "/media/reels/reel-01.mp4", title: "Reel 01", sour
 export default function MobileHomeReelHero() {
   const { cms } = useCms();
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const firstReelTapHandledRef = useRef(false);
   const [reels, setReels] = useState<Reel[]>([fallback]);
   const [muted, setMuted] = useState(true);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
@@ -108,6 +109,41 @@ export default function MobileHomeReelHero() {
     }
   }
 
+  async function handleFirstReelTap(event: ReactMouseEvent<HTMLElement>) {
+    // Only a normal tap on the Reel surface should enable sound.
+    // Buttons/links keep their existing behavior and do not trigger this.
+    if (
+      event.target instanceof Element &&
+      event.target.closest("button, a, input, textarea, select, [role='button']")
+    ) {
+      return;
+    }
+
+    if (firstReelTapHandledRef.current) return;
+
+    const video = videoRef.current;
+    if (!video || !video.muted) return;
+
+    try {
+      // iOS/Safari requires unmute + play inside the direct tap gesture.
+      video.muted = false;
+      video.defaultMuted = false;
+      video.removeAttribute("muted");
+      video.volume = 1;
+
+      await video.play();
+
+      firstReelTapHandledRef.current = true;
+      setMuted(false);
+      setPlaying(true);
+      setAutoplayBlocked(false);
+    } catch {
+      // If the browser rejects this tap, leave the normal Sound button usable
+      // and allow a later Reel-surface tap to try again.
+      setMuted(video.muted);
+    }
+  }
+
   async function toggleSound() {
     const video = videoRef.current;
     if (!video) return;
@@ -151,7 +187,10 @@ export default function MobileHomeReelHero() {
   const sizeClass = `text-${cms.homeReel.textSize || "large"}`;
 
   return (
-    <section className={`mobile-home-reel ${toneClass}`}>
+    <section
+      className={`mobile-home-reel ${toneClass}`}
+      onClick={handleFirstReelTap}
+    >
       <video
         ref={videoRef}
         key={selected.url}
