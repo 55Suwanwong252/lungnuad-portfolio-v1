@@ -4,6 +4,7 @@ import { CheckCircle2, Clapperboard, Eye, Heart, MapPin } from "lucide-react";
 import HomeWorkShelves from "@/components/HomeWorkShelves";
 import PortfolioCategoryNav from "@/components/PortfolioCategoryNav";
 import { useCms } from "@/components/CmsProvider";
+import { totalPortfolioVideos } from "@/lib/portfolioVideoLibrary";
 
 export default function ProjectsPage() {
   const { cms } = useCms();
@@ -44,7 +45,7 @@ export default function ProjectsPage() {
           </div>
 
           <div className="profile-meta profile-meta-v2">
-            <div><Eye /><b>{cms.projects.length}</b><span>ผลงาน</span></div>
+            <div><Eye /><b>{totalPortfolioVideos()}</b><span>ผลงาน</span></div>
             <div><Heart /><b>{p.experience}</b><span>Years Experience</span></div>
             <div><MapPin /><b>{p.location}</b><span>Available Nationwide</span></div>
           </div>

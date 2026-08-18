@@ -7,11 +7,12 @@ import { useCms } from "@/components/CmsProvider";
 import PortfolioCategoryNav from "@/components/PortfolioCategoryNav";
 import {
   getPortfolioCategory,
-  projectsForCategory,
   type PortfolioCategorySlug,
 } from "@/lib/portfolioCategories";
-import { youtubeVideoId } from "@/lib/youtube";
-import type { Project } from "@/lib/cms";
+import {
+  portfolioVideosForCategory,
+  type PortfolioLibraryWork,
+} from "@/lib/portfolioVideoLibrary";
 
 export default function PortfolioCategoryLibrary({
   slug,
@@ -20,17 +21,12 @@ export default function PortfolioCategoryLibrary({
 }) {
   const { cms } = useCms();
   const category = getPortfolioCategory(slug);
-  const projects = useMemo(
-    () => projectsForCategory(cms.projects, slug),
+  const works = useMemo(
+    () => portfolioVideosForCategory(slug, cms.projects),
     [cms.projects, slug]
   );
-  const featured = projects.find((project) => project.featured) || projects[0];
-  const [watching, setWatching] = useState<Project | null>(null);
-
-  const watchYoutubeId =
-    watching?.video?.type === "youtube"
-      ? youtubeVideoId(watching.video.src)
-      : "";
+  const featured = works[0];
+  const [watching, setWatching] = useState<PortfolioLibraryWork | null>(null);
 
   async function sharePage() {
     if (typeof window === "undefined") return;
@@ -62,7 +58,7 @@ export default function PortfolioCategoryLibrary({
       <section className="portfolio-category-shell">
         <div className="portfolio-category-topline">
           <Link href="/projects"><ArrowLeft /> ผลงานทั้งหมด</Link>
-          <span>{projects.length} WORKS</span>
+          <span>{works.length} WORKS</span>
         </div>
 
         <PortfolioCategoryNav active={slug} />
@@ -73,7 +69,7 @@ export default function PortfolioCategoryLibrary({
           <p>{category.description}</p>
         </header>
 
-        {featured ? (
+        {featured && (
           <section
             className="category-featured"
             style={{ backgroundImage: `url("${featured.cover}")` }}
@@ -83,23 +79,9 @@ export default function PortfolioCategoryLibrary({
               <span>FEATURED</span>
               <h2>{featured.title}</h2>
               <p>{featured.subtitle}</p>
-              {featured.video?.type === "youtube" && youtubeVideoId(featured.video.src) ? (
-                <button type="button" onClick={() => setWatching(featured)}>
-                  <Play fill="currentColor" /> Play
-                </button>
-              ) : (
-                <Link href={`/projects/${featured.slug}`}>
-                  View project <ArrowRight />
-                </Link>
-              )}
-            </div>
-          </section>
-        ) : (
-          <section className="category-featured category-featured-empty">
-            <div className="category-featured-copy">
-              <span>COMING SOON</span>
-              <h2>More work coming soon.</h2>
-              <p>Selected films and visual stories will be added to this collection.</p>
+              <button type="button" onClick={() => setWatching(featured)}>
+                <Play fill="currentColor" /> Play
+              </button>
             </div>
           </section>
         )}
@@ -110,64 +92,46 @@ export default function PortfolioCategoryLibrary({
               <span>FULL LIBRARY</span>
               <h2>{category.title}</h2>
             </div>
-            <b>{projects.length} works</b>
+            <b>{works.length} works</b>
           </div>
 
-          {projects.length > 0 ? (
-            <div className="category-library-grid">
-              {projects.map((project, index) => {
-                const youtubeId =
-                  project.video?.type === "youtube"
-                    ? youtubeVideoId(project.video.src)
-                    : "";
-
-                return (
-                  <article className="category-library-card" key={project.slug}>
-                    <div
-                      className="category-library-cover"
-                      style={{ backgroundImage: `url("${project.cover}")` }}
-                    >
-                      <span className="category-library-number">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-
-                      {youtubeId ? (
-                        <button
-                          type="button"
-                          className="category-library-play"
-                          onClick={() => setWatching(project)}
-                          aria-label={`Play ${project.title}`}
-                        >
-                          <Play fill="currentColor" />
-                        </button>
-                      ) : (
-                        <Link
-                          className="category-library-play"
-                          href={`/projects/${project.slug}`}
-                          aria-label={`Open ${project.title}`}
-                        >
-                          <ArrowRight />
-                        </Link>
-                      )}
-                    </div>
-
-                    <div className="category-library-copy">
-                      <Link href={`/projects/${project.slug}`}>{project.title}</Link>
-                      <span>{project.client || project.category} · {project.year}</span>
-                    </div>
-                  </article>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="category-library-empty-grid">
-              {Array.from({ length: 8 }).map((_, index) => (
-                <div className="category-library-empty-card" key={index}>
-                  <span>COMING SOON</span>
+          <div className="category-library-grid">
+            {works.map((work) => (
+              <article className="category-library-card" key={work.id}>
+                <div
+                  className="category-library-cover"
+                  style={{ backgroundImage: `url("${work.cover}")` }}
+                >
+                  <span className="category-library-number">
+                    {String(work.order).padStart(2, "0")}
+                  </span>
+                  <button
+                    type="button"
+                    className="category-library-play"
+                    onClick={() => setWatching(work)}
+                    aria-label={`Play ${work.title}`}
+                  >
+                    <Play fill="currentColor" />
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
+
+                <div className="category-library-copy">
+                  {work.projectSlug ? (
+                    <Link href={`/projects/${work.projectSlug}`}>{work.title}</Link>
+                  ) : (
+                    <button
+                      className="portfolio-work-title-button"
+                      type="button"
+                      onClick={() => setWatching(work)}
+                    >
+                      {work.title}
+                    </button>
+                  )}
+                  <span>{work.client} · {work.year}</span>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="category-share-panel category-share-minimal">
@@ -177,7 +141,7 @@ export default function PortfolioCategoryLibrary({
         </section>
       </section>
 
-      {watching && watchYoutubeId && (
+      {watching && (
         <div className="watch-modal" role="dialog" aria-modal="true" aria-label={`${watching.title} video`}>
           <button
             className="watch-modal-close"
@@ -191,7 +155,7 @@ export default function PortfolioCategoryLibrary({
           <div className="watch-modal-shell">
             <div className="watch-modal-player">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${watchYoutubeId}?autoplay=1&playsinline=1&rel=0&controls=1`}
+                src={`https://www.youtube-nocookie.com/embed/${watching.videoId}?autoplay=1&playsinline=1&rel=0&controls=1`}
                 title={`${watching.title} video`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
@@ -199,12 +163,14 @@ export default function PortfolioCategoryLibrary({
             </div>
 
             <div className="watch-modal-info">
-              <span>{category.title} · {watching.year}</span>
+              <span>{category.title}</span>
               <h2>{watching.title}</h2>
-              <p>{watching.subtitle}</p>
-              <Link href={`/projects/${watching.slug}`} onClick={() => setWatching(null)}>
-                View project <ArrowRight />
-              </Link>
+              <p>{watching.client}</p>
+              {watching.projectSlug && (
+                <Link href={`/projects/${watching.projectSlug}`} onClick={() => setWatching(null)}>
+                  View project <ArrowRight />
+                </Link>
+              )}
             </div>
           </div>
         </div>

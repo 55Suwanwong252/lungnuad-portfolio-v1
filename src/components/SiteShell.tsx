@@ -46,6 +46,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         <div className="sidebar-section">
           <span className="eyebrow">Categories</span>
           <Link href="/projects/category/commercial">Commercial / Advertising</Link>
+          <Link href="/projects/category/wedding">Wedding</Link>
           <Link href="/projects/category/education">Education</Link>
           <Link href="/projects/category/corporate">Corporate / Presentation</Link>
           <Link href="/projects/category/event">Event</Link>

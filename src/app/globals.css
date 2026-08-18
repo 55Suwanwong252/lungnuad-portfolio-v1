@@ -2770,3 +2770,127 @@ h1, h2, h3 { line-height: 1.16; }
     min-height:46px;
   }
 }
+
+
+/* =========================================================
+   BUILD 11.5.2 — WEDDING CATEGORY / DESKTOP READABILITY
+   Desktop only: neutral, readable type scale. Mobile unchanged.
+   ========================================================= */
+@media(min-width:768px){
+  html{
+    font-size:16px;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
+  }
+
+  /* Global navigation / utility text */
+  .nav-item{font-size:14px}
+  .sidebar-section a{font-size:13px;line-height:1.4}
+  .sidebar-footer{font-size:11px}
+  .brand-sub{font-size:8px}
+  .search-box input{font-size:13px}
+
+  /* Home profile / hero */
+  .home-cover-badges>span{font-size:11px}
+  .home-cover-about>span{font-size:11px}
+  .home-cover-about>p{font-size:13px}
+  .home-cover-about>small{font-size:12px;line-height:1.7}
+  .home-cover-tags span{font-size:10px}
+  .home-cover-stats b{font-size:14px}
+  .home-cover-stats span{font-size:10px}
+
+  .light-kicker,
+  .section-head-light span{font-size:11px}
+  .home-hero-editorial .hero-lead{font-size:16px}
+  .hero-proof-tags span{font-size:10px}
+  .hero-editorial-panel small{font-size:9px}
+  .hero-editorial-panel b{font-size:18px}
+  .hero-editorial-panel p{font-size:12px}
+  .dark-cta,.ghost-cta{font-size:13px}
+
+  /* Services */
+  .services-section-head p{font-size:12px}
+  .service-module-card h3{font-size:16px!important}
+  .service-module-card p{font-size:12px!important;line-height:1.65!important}
+  .service-order{font-size:10px}
+
+  /* Browse shelves */
+  .home-watch-zone-head>div>span{font-size:10px}
+  .home-watch-zone-head p{font-size:12px}
+  .home-watch-zone-head>a{font-size:10px}
+  .home-watch-shelf-head h3{font-size:17px!important}
+  .home-watch-shelf-head>div:first-child span{font-size:9px}
+  .home-watch-shelf-actions>a{font-size:10px}
+  .home-watch-card-copy>a{font-size:12px!important}
+  .home-watch-card-copy>span{font-size:9px!important}
+  .home-watch-card-year{font-size:8px}
+
+  /* Projects / profile */
+  .project-profile-copy>p,
+  .project-profile-description{font-size:14px;line-height:1.7}
+  .project-tags span{font-size:10px}
+  .profile-meta b{font-size:14px}
+  .profile-meta span{font-size:9px}
+
+  /* Category navigation + Netflix library */
+  .portfolio-category-nav a{font-size:11px;padding:11px 15px}
+  .portfolio-category-topline a{font-size:11px}
+  .portfolio-category-topline>span{font-size:10px}
+  .portfolio-category-header>span,
+  .category-library-head span{font-size:10px}
+  .portfolio-category-header p{font-size:14px;line-height:1.75}
+  .category-featured-copy>span{font-size:10px}
+  .category-featured-copy p{font-size:13px}
+  .category-featured-copy button,
+  .category-featured-copy a{font-size:11px}
+  .category-library-head>b{font-size:11px}
+  .category-library-copy>a{font-size:12px}
+  .category-library-copy>span{font-size:9px}
+  .category-library-number{font-size:8px}
+
+  /* Contact / footer actions */
+  .clean-contact>div,
+  .clean-contact a{font-size:12px}
+  .category-share-only{font-size:12px!important}
+}
+
+
+/* =========================================================
+   BUILD 11.6 — CURATED YOUTUBE PORTFOLIO LIBRARY
+   ========================================================= */
+.portfolio-work-title-button{
+  appearance:none;
+  padding:0;
+  border:0;
+  background:none;
+  color:inherit;
+  font:inherit;
+  font-weight:inherit;
+  line-height:inherit;
+  text-align:left;
+  cursor:pointer;
+}
+.home-watch-card-copy .portfolio-work-title-button{
+  overflow:hidden;
+  color:#171715;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.25;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.category-library-copy .portfolio-work-title-button{
+  overflow:hidden;
+  color:#171715;
+  font-size:12px;
+  font-weight:700;
+  line-height:1.25;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+@media(max-width:767px){
+  .home-watch-card-copy .portfolio-work-title-button,
+  .category-library-copy .portfolio-work-title-button{
+    font-size:9px;
+  }
+}

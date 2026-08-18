@@ -2,6 +2,7 @@ import type { Project } from "@/lib/cms";
 
 export type PortfolioCategorySlug =
   | "commercial"
+  | "wedding"
   | "education"
   | "corporate"
   | "event"
@@ -25,6 +26,14 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     keywords: ["commercial", "advertising", "tvc", "product", "beauty", "food", "restaurant", "cafe", "café", "sushi", "โฆษณา", "สินค้า", "ร้านอาหาร"],
   },
   {
+    slug: "wedding",
+    title: "Wedding",
+    eyebrow: "WEDDING / CINEMATIC / CEREMONY",
+    description:
+      "ภาพยนตร์งานแต่ง Wedding Highlight, Ceremony และเรื่องราวของคู่รัก ที่เน้นอารมณ์ บรรยากาศ และความทรงจำในวันสำคัญ",
+    keywords: ["wedding", "wedding film", "wedding cinema", "bride", "groom", "ceremony", "แต่งงาน", "งานแต่ง", "เจ้าบ่าว", "เจ้าสาว"],
+  },
+  {
     slug: "education",
     title: "Education",
     eyebrow: "EDUCATION / UNIVERSITY / TRAINING",
@@ -45,8 +54,8 @@ export const PORTFOLIO_CATEGORIES: PortfolioCategory[] = [
     title: "Event",
     eyebrow: "EVENT / CEREMONY / DOCUMENTARY",
     description:
-      "งานอีเวนต์ พิธีสำคัญ Wedding, Documentary, PR และเบื้องหลัง ที่เน้นบรรยากาศจริงและอารมณ์ของเหตุการณ์",
-    keywords: ["event", "documentary", "wedding", "sport", "behind", "bts", "pr", "พิธี", "แต่งงาน", "งานแต่ง"],
+      "งานอีเวนต์ Documentary, PR, Sport และเบื้องหลัง ที่เน้นบรรยากาศจริง ความเคลื่อนไหว และอารมณ์ของเหตุการณ์",
+    keywords: ["event", "documentary", "sport", "behind", "bts", "pr", "อีเวนต์", "งานกิจกรรม", "เบื้องหลัง"],
   },
   {
     slug: "school-activities",
@@ -82,6 +91,9 @@ export function categoryForProject(project: Project): PortfolioCategorySlug {
 
   const corporate = getPortfolioCategory("corporate");
   if (corporate.keywords.some((keyword) => hay.includes(keyword))) return corporate.slug;
+
+  const wedding = getPortfolioCategory("wedding");
+  if (wedding.keywords.some((keyword) => hay.includes(keyword))) return wedding.slug;
 
   const event = getPortfolioCategory("event");
   if (event.keywords.some((keyword) => hay.includes(keyword))) return event.slug;
