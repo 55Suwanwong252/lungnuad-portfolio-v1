@@ -38,10 +38,15 @@ export default function MobileHomeReelHero() {
     const video = videoRef.current;
     if (!video) return;
 
-    if (muted) {
-      video.muted = true;
+    // Autoplay should preserve the video's CURRENT sound state.
+    // Initial mounting sets the video to muted before this runs.
+    // After a user explicitly unmutes, do not force it back to muted.
+    if (video.muted) {
       video.defaultMuted = true;
       video.setAttribute("muted", "");
+    } else {
+      video.defaultMuted = false;
+      video.removeAttribute("muted");
     }
 
     video.playsInline = true;
@@ -54,7 +59,7 @@ export default function MobileHomeReelHero() {
       setPlaying(false);
       setAutoplayBlocked(true);
     }
-  }, [muted]);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
