@@ -12,8 +12,19 @@ const notoThai = Noto_Sans_Thai({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://lungnuad.vercel.app"),
   title: "Lungnuad Production",
   description: "Video, photography, and visual storytelling portfolio.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    url: "/",
+    title: "Lungnuad Production",
+    description: "Video, photography, and visual storytelling portfolio.",
+    siteName: "Lungnuad Production",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
