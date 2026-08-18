@@ -284,7 +284,7 @@ export default function Studio() {
                   <option value="none">None</option><option value="youtube">YouTube</option><option value="mp4">Uploaded MP4</option><option value="vimeo">Vimeo</option>
                 </select>
               </label>
-              <Field label={currentProject.video.type === "youtube" ? "YouTube Video ID" : "Video URL / Source"} value={currentProject.video.src} onChange={(v)=>patchProject(selectedProject,{video:{...currentProject.video,src:youtubeId(v,currentProject.video.type)}})} />
+              <Field label={currentProject.video.type === "youtube" ? "YouTube URL หรือ Video ID (เล่นบนเว็บ)" : "Video URL / Source"} value={currentProject.video.src} onChange={(v)=>patchProject(selectedProject,{video:{...currentProject.video,src:youtubeId(v,currentProject.video.type)}})} />
               <MediaUpload label="หรือ Upload วิดีโอแนวนอน" value={currentProject.video.type === "mp4" ? currentProject.video.src : ""} accept="video/*" busy={mediaBusy === "project-video"}
                 onUpload={async(file)=>{setMediaBusy("project-video"); const b=await uploadMedia(file,`project-videos/${currentProject.slug}`); patchProject(selectedProject,{video:{type:"mp4",src:b.url}}); setMediaBusy("");}}
                 onUrl={(v)=>patchProject(selectedProject,{video:{type:"mp4",src:v}})}/>
@@ -503,5 +503,5 @@ function LivePreview({tab,cms,project,gallery,reels,previewReelUrl}:{tab:Tab;cms
   if(tab==="gallery" && gallery) return <div className="preview-simple"><span>{cms.galleryPage.eyebrow}</span><h1>{cms.galleryPage.title}</h1><p>{cms.galleryPage.description}</p><div className="preview-gallery-image" style={{backgroundImage:`url("${gallery.image}")`}}><b>{gallery.title}</b><small>{gallery.caption}</small></div></div>;
   if(tab==="about") return <div className="preview-simple"><span>{cms.aboutPage.eyebrow}</span><h1>{cms.aboutPage.title}</h1><p>{cms.aboutPage.description}</p></div>;
   if(tab==="contact") return <div className="preview-simple"><span>{cms.contactPage.eyebrow}</span><h1>{cms.contactPage.title}</h1><p>{cms.contactPage.description}</p><b>{cms.site.email}</b></div>;
-  return <div className="preview-simple"><span>GLOBAL</span><h1>{cms.site.brand}</h1><p>{cms.site.tagline}</p><div className="preview-liquid">Home · Reels · Projects · Gallery · More</div></div>;
+  return <div className="preview-simple"><span>GLOBAL</span><h1>{cms.site.brand}</h1><p>{cms.site.tagline}</p><div className="preview-liquid">Home · ผลงาน · Gallery</div></div>;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
 import ProjectCard from "@/components/ProjectCard";
 import MediaPlayer from "@/components/MediaPlayer";
 import { useCms } from "@/components/CmsProvider";
@@ -15,7 +15,7 @@ export default function ProjectDetailClient({ slug }: { slug: string }) {
       <div className="page-wrap narrow-page">
         <span className="eyebrow">PROJECT</span>
         <h1 className="display-title">ไม่พบโปรเจค</h1>
-        <Link href="/projects" className="primary-button inline-button">กลับ Projects</Link>
+        <Link href="/projects" className="primary-button inline-button">กลับหน้าผลงาน</Link>
       </div>
     );
   }
@@ -62,10 +62,6 @@ export default function ProjectDetailClient({ slug }: { slug: string }) {
         <div className="section-title"><div><span className="eyebrow">Continue exploring</span><h2>Related projects</h2></div></div>
         <div className="card-grid">{related.map(item=><ProjectCard project={item} key={item.slug}/>)}</div>
       </section>
-
-      <div className="edit-hint">
-        ต้องการเปลี่ยนภาพ/วิดีโอของหน้านี้? เปิด <Link href="/studio">Content Studio <ArrowUpRight size={14}/></Link>
-      </div>
     </article>
   );
 }

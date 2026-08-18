@@ -1,7 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowRight, CheckCircle2, Clapperboard, Eye, Heart, MapPin } from "lucide-react";
+import { CheckCircle2, Clapperboard, Eye, Heart, MapPin } from "lucide-react";
+import HomeWorkShelves from "@/components/HomeWorkShelves";
+import PortfolioCategoryNav from "@/components/PortfolioCategoryNav";
 import { useCms } from "@/components/CmsProvider";
 
 export default function ProjectsPage() {
@@ -10,8 +11,19 @@ export default function ProjectsPage() {
   const p = cms.projectsPage;
 
   return (
-    <div className="light-page project-profile-page">
-      <section className="project-profile-hero project-profile-v2">
+    <div className="light-page project-profile-page portfolio-work-page">
+      <section className="portfolio-browse-first">
+        <PortfolioCategoryNav />
+        <div className="browse-work-shell portfolio-browse-shell">
+          <HomeWorkShelves
+            projects={cms.projects}
+            showExploreLink={false}
+            showShelfViewAll
+          />
+        </div>
+      </section>
+
+      <section className="project-profile-hero project-profile-v2 portfolio-profile-bottom">
         <div className="project-cover-photo project-cover-v2" style={{ backgroundImage: `url(${p.coverUrl || hero?.cover})` }}>
           <div className="project-badges">
             <span><Clapperboard /> Visual Production</span>
@@ -32,27 +44,10 @@ export default function ProjectsPage() {
           </div>
 
           <div className="profile-meta profile-meta-v2">
-            <div><Eye /><b>{cms.projects.length}</b><span>Projects</span></div>
+            <div><Eye /><b>{cms.projects.length}</b><span>ผลงาน</span></div>
             <div><Heart /><b>{p.experience}</b><span>Years Experience</span></div>
             <div><MapPin /><b>{p.location}</b><span>Available Nationwide</span></div>
           </div>
-        </div>
-      </section>
-
-      <section className="clean-section projects-list-section">
-        <div className="section-head-light"><div><span>PORTFOLIO</span><h2>{p.heading}</h2></div></div>
-        <div className="project-clean-grid projects-three">
-          {cms.projects.map((project) => (
-            <Link className="project-clean-card" href={`/projects/${project.slug}`} key={project.slug}>
-              <div className="project-clean-img" style={{ backgroundImage: `url(${project.cover})` }} />
-              <div className="project-clean-body">
-                <span>{project.category}</span>
-                <h3>{project.title}</h3>
-                <p>{project.subtitle}</p>
-                <ArrowRight />
-              </div>
-            </Link>
-          ))}
         </div>
       </section>
     </div>

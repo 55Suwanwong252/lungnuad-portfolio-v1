@@ -3,33 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  House, PlaySquare, FolderKanban, Images, UserRound, Mail,
-  Search, Menu, ShieldCheck, MoreHorizontal, X
+  House, FolderKanban, Images,
+  Search, Menu, ShieldCheck
 } from "lucide-react";
-import { ReactNode, useState } from "react";
-import { useCms } from "@/components/CmsProvider";
+import { ReactNode } from "react";
 
 const desktopNav = [
   { href: "/", label: "Home", icon: House },
-  { href: "/reels", label: "Reels", icon: PlaySquare },
-  { href: "/projects", label: "Projects", icon: FolderKanban },
+  { href: "/projects", label: "ผลงาน", icon: FolderKanban },
   { href: "/gallery", label: "Gallery", icon: Images },
-  { href: "/about", label: "About", icon: UserRound },
-  { href: "/contact", label: "Contact", icon: Mail },
-  { href: "/studio", label: "Admin", icon: ShieldCheck },
 ];
 
 export default function SiteShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  const [moreOpen, setMoreOpen] = useState(false);
-  const { cms } = useCms();
-
-  const labels = cms.navigation;
   const mobileNav = [
-    { href: "/", label: labels.home, icon: House },
-    { href: "/reels", label: labels.reels, icon: PlaySquare },
-    { href: "/projects", label: labels.projects, icon: FolderKanban },
-    { href: "/gallery", label: labels.gallery, icon: Images },
+    { href: "/", label: "Home", icon: House },
+    { href: "/projects", label: "ผลงาน", icon: FolderKanban },
+    { href: "/gallery", label: "Gallery", icon: Images },
   ];
 
   return (
@@ -55,14 +45,15 @@ export default function SiteShell({ children }: { children: ReactNode }) {
 
         <div className="sidebar-section">
           <span className="eyebrow">Categories</span>
-          <Link href="/projects">All Work</Link>
-          <Link href="/projects?category=Education">Education</Link>
-          <Link href="/projects?category=Commercial">Commercial</Link>
-          <Link href="/projects?category=Restaurant">Restaurant</Link>
-          <Link href="/projects?category=Event">Event</Link>
+          <Link href="/projects/category/commercial">Commercial / Advertising</Link>
+          <Link href="/projects/category/education">Education</Link>
+          <Link href="/projects/category/corporate">Corporate / Presentation</Link>
+          <Link href="/projects/category/event">Event</Link>
+          <Link href="/projects/category/school-activities">School Activities</Link>
         </div>
 
         <div className="sidebar-footer">
+          <Link className="sidebar-admin-link" href="/studio"><ShieldCheck size={14} /> Admin</Link>
           <span>Visual stories with purpose.</span>
           <small>© 2026 Lungnuad Production</small>
         </div>
@@ -79,7 +70,7 @@ export default function SiteShell({ children }: { children: ReactNode }) {
           <div className="topbar-actions">
             <label className="search-box" aria-label="Search projects">
               <Search size={17} />
-              <input placeholder="Search projects..." />
+              <input placeholder="Search work..." />
             </label>
             <button className="icon-button" aria-label="Open menu"><Menu size={20} /></button>
           </div>
@@ -87,13 +78,6 @@ export default function SiteShell({ children }: { children: ReactNode }) {
         {children}
       </main>
 
-      {moreOpen && (
-        <div className="liquid-more-sheet">
-          <button className="liquid-more-close" onClick={() => setMoreOpen(false)}><X /></button>
-          <Link href="/about" onClick={() => setMoreOpen(false)}><UserRound />{labels.about}</Link>
-          <Link href="/contact" onClick={() => setMoreOpen(false)}><Mail />{labels.contact}</Link>
-        </div>
-      )}
 
       <nav className="liquid-mobile-nav">
         {mobileNav.map((item) => {
@@ -106,10 +90,6 @@ export default function SiteShell({ children }: { children: ReactNode }) {
             </Link>
           );
         })}
-        <button className={`liquid-nav-item ${moreOpen ? "active" : ""}`} onClick={() => setMoreOpen(v => !v)}>
-          <MoreHorizontal />
-          <span>{labels.more}</span>
-        </button>
       </nav>
     </div>
   );

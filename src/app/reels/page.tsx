@@ -96,7 +96,7 @@ export default function ReelsPage() {
   if (ordered.length === 0) {
     return (
       <div className="reels-zero-state">
-        <div><span>LUNGNUAD REELS</span><h1>ยังไม่มี Reel</h1><p>เข้า Admin เพื่ออัปโหลดคลิปแรกของคุณ</p><Link href="/studio">Open Admin</Link></div>
+        <div><span>LUNGNUAD REELS</span><h1>More reels coming soon.</h1><p>New visual stories will be added here.</p></div>
       </div>
     );
   }
