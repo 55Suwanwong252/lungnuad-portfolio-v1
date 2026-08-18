@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Play, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Play } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
+import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
+import { useYouTubeTitles } from "@/lib/useYouTubeTitles";
 import type { Project } from "@/lib/cms";
 import {
   PORTFOLIO_CATEGORIES,
@@ -71,14 +73,19 @@ function ShelfRow({
               style={{ backgroundImage: `url("${work.cover}")` }}
             >
               <span className="home-watch-card-shade" />
-              <button
+              <a
                 className="home-watch-card-play"
-                type="button"
-                onClick={() => onWatch(work)}
+                href={`/watch/${shelf.key}/${work.videoId}`}
+                onClick={(event) => {
+                  if (!window.matchMedia("(max-width: 767px)").matches) {
+                    event.preventDefault();
+                    onWatch(work);
+                  }
+                }}
                 aria-label={`Play ${work.title}`}
               >
                 <Play fill="currentColor" />
-              </button>
+              </a>
               <span className="home-watch-card-year">
                 {String(work.order).padStart(2, "0")}
               </span>
@@ -88,13 +95,18 @@ function ShelfRow({
               {work.projectSlug ? (
                 <Link href={`/projects/${work.projectSlug}`}>{work.title}</Link>
               ) : (
-                <button
+                <a
                   className="portfolio-work-title-button"
-                  type="button"
-                  onClick={() => onWatch(work)}
+                  href={`/watch/${shelf.key}/${work.videoId}`}
+                  onClick={(event) => {
+                    if (!window.matchMedia("(max-width: 767px)").matches) {
+                      event.preventDefault();
+                      onWatch(work);
+                    }
+                  }}
                 >
                   {work.title}
-                </button>
+                </a>
               )}
               <span>{work.subtitle}</span>
             </div>
@@ -116,7 +128,7 @@ export default function HomeWorkShelves({
 }) {
   const [watching, setWatching] = useState<PortfolioLibraryWork | null>(null);
 
-  const shelves = useMemo<Shelf[]>(
+  const rawShelves = useMemo<Shelf[]>(
     () =>
       PORTFOLIO_CATEGORIES.map((category) => ({
         key: category.slug,
@@ -125,6 +137,37 @@ export default function HomeWorkShelves({
       })),
     [projects]
   );
+
+  const allVideoIds = useMemo(
+    () => rawShelves.flatMap((shelf) => shelf.works.map((work) => work.videoId)),
+    [rawShelves]
+  );
+  const youtubeMeta = useYouTubeTitles(allVideoIds);
+
+  const shelves = useMemo<Shelf[]>(
+    () =>
+      rawShelves.map((shelf) => ({
+        ...shelf,
+        works: shelf.works.map((work) => ({
+          ...work,
+          title: youtubeMeta[work.videoId]?.title || work.title,
+          client:
+            work.client === "Lungnuad Production"
+              ? youtubeMeta[work.videoId]?.author || work.client
+              : work.client,
+        })),
+      })),
+    [rawShelves, youtubeMeta]
+  );
+
+  const watchingResolved = watching
+    ? shelves
+        .flatMap((shelf) => shelf.works)
+        .find((work) => work.videoId === watching.videoId) || watching
+    : null;
+  const watchingShelf = watchingResolved
+    ? shelves.find((shelf) => shelf.key === watchingResolved.category)
+    : undefined;
 
   return (
     <>
@@ -154,45 +197,13 @@ export default function HomeWorkShelves({
         </div>
       </section>
 
-      {watching && (
-        <div
-          className="watch-modal home-watch-modal"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${watching.title} video`}
-        >
-          <button
-            className="watch-modal-close"
-            type="button"
-            onClick={() => setWatching(null)}
-            aria-label="Close video"
-          >
-            <X />
-          </button>
-
-          <div className="watch-modal-shell">
-            <div className="watch-modal-player">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${watching.videoId}?autoplay=1&playsinline=1&rel=0&controls=1`}
-                title={`${watching.title} video`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
-            </div>
-
-            <div className="watch-modal-info">
-              <span>{watching.subtitle}</span>
-              <h2>{watching.title}</h2>
-              <p>{watching.client}</p>
-              {watching.projectSlug && (
-                <Link href={`/projects/${watching.projectSlug}`} onClick={() => setWatching(null)}>
-                  View project <ArrowRight />
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <PortfolioWatchPlayer
+        current={watchingResolved}
+        works={watchingShelf?.works || []}
+        categoryTitle={watchingShelf?.title || ""}
+        onClose={() => setWatching(null)}
+        onSelect={setWatching}
+      />
     </>
   );
 }

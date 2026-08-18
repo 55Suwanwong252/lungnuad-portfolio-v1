@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ChevronDown, Share2, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useCms } from "@/components/CmsProvider";
 
 type Reel = { url: string; title: string; source?: "local" | "blob" | string };
@@ -32,15 +32,46 @@ export default function MobileHomeReelHero() {
   const meta = cms.reelMeta[selected.url] || {};
   const reelTitle = cms.homeReel.title || meta.title || selected.title;
 
+  const ensureAutoplay = useCallback(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (muted) {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute("muted", "");
+    }
+
+    video.playsInline = true;
+    video.play().catch(() => {});
+  }, [muted]);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    setMuted(true);
     video.muted = true;
     video.defaultMuted = true;
+    video.setAttribute("muted", "");
     video.volume = 1;
-    setMuted(true);
-    video.play().catch(() => {});
-  }, [selected.url]);
+
+    const first = window.requestAnimationFrame(ensureAutoplay);
+    const retryOne = window.setTimeout(ensureAutoplay, 160);
+    const retryTwo = window.setTimeout(ensureAutoplay, 700);
+
+    const onVisibility = () => {
+      if (document.visibilityState === "visible") ensureAutoplay();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
+
+    return () => {
+      window.cancelAnimationFrame(first);
+      window.clearTimeout(retryOne);
+      window.clearTimeout(retryTwo);
+      document.removeEventListener("visibilitychange", onVisibility);
+    };
+  }, [selected.url, ensureAutoplay]);
 
   async function toggleSound() {
     const video = videoRef.current;
@@ -92,6 +123,10 @@ export default function MobileHomeReelHero() {
         muted={muted}
         playsInline
         preload="auto"
+        controls={false}
+        disablePictureInPicture
+        onLoadedMetadata={ensureAutoplay}
+        onCanPlay={ensureAutoplay}
       />
       <div className="mobile-home-reel-shade" style={{ opacity: cms.homeReel.overlayOpacity }} />
 

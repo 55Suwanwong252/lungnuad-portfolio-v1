@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Play, X } from "lucide-react";
+import { ArrowLeft, Play } from "lucide-react";
 import { useMemo, useState } from "react";
+import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
+import { useYouTubeTitles } from "@/lib/useYouTubeTitles";
 import { useCms } from "@/components/CmsProvider";
 import PortfolioCategoryNav from "@/components/PortfolioCategoryNav";
 import {
@@ -21,12 +23,28 @@ export default function PortfolioCategoryLibrary({
 }) {
   const { cms } = useCms();
   const category = getPortfolioCategory(slug);
-  const works = useMemo(
+  const rawWorks = useMemo(
     () => portfolioVideosForCategory(slug, cms.projects),
     [cms.projects, slug]
   );
+  const youtubeMeta = useYouTubeTitles(rawWorks.map((work) => work.videoId));
+  const works = useMemo(
+    () =>
+      rawWorks.map((work) => ({
+        ...work,
+        title: youtubeMeta[work.videoId]?.title || work.title,
+        client:
+          work.client === "Lungnuad Production"
+            ? youtubeMeta[work.videoId]?.author || work.client
+            : work.client,
+      })),
+    [rawWorks, youtubeMeta]
+  );
   const featured = works[0];
   const [watching, setWatching] = useState<PortfolioLibraryWork | null>(null);
+  const watchingResolved = watching
+    ? works.find((work) => work.videoId === watching.videoId) || watching
+    : null;
 
   async function sharePage() {
     if (typeof window === "undefined") return;
@@ -79,9 +97,17 @@ export default function PortfolioCategoryLibrary({
               <span>FEATURED</span>
               <h2>{featured.title}</h2>
               <p>{featured.subtitle}</p>
-              <button type="button" onClick={() => setWatching(featured)}>
+              <a
+                href={`/watch/${slug}/${featured.videoId}`}
+                onClick={(event) => {
+                  if (!window.matchMedia("(max-width: 767px)").matches) {
+                    event.preventDefault();
+                    setWatching(featured);
+                  }
+                }}
+              >
                 <Play fill="currentColor" /> Play
-              </button>
+              </a>
             </div>
           </section>
         )}
@@ -105,27 +131,37 @@ export default function PortfolioCategoryLibrary({
                   <span className="category-library-number">
                     {String(work.order).padStart(2, "0")}
                   </span>
-                  <button
-                    type="button"
+                  <a
                     className="category-library-play"
-                    onClick={() => setWatching(work)}
+                    href={`/watch/${slug}/${work.videoId}`}
+                    onClick={(event) => {
+                      if (!window.matchMedia("(max-width: 767px)").matches) {
+                        event.preventDefault();
+                        setWatching(work);
+                      }
+                    }}
                     aria-label={`Play ${work.title}`}
                   >
                     <Play fill="currentColor" />
-                  </button>
+                  </a>
                 </div>
 
                 <div className="category-library-copy">
                   {work.projectSlug ? (
                     <Link href={`/projects/${work.projectSlug}`}>{work.title}</Link>
                   ) : (
-                    <button
+                    <a
                       className="portfolio-work-title-button"
-                      type="button"
-                      onClick={() => setWatching(work)}
+                      href={`/watch/${slug}/${work.videoId}`}
+                      onClick={(event) => {
+                        if (!window.matchMedia("(max-width: 767px)").matches) {
+                          event.preventDefault();
+                          setWatching(work);
+                        }
+                      }}
                     >
                       {work.title}
-                    </button>
+                    </a>
                   )}
                   <span>{work.client} · {work.year}</span>
                 </div>
@@ -141,40 +177,13 @@ export default function PortfolioCategoryLibrary({
         </section>
       </section>
 
-      {watching && (
-        <div className="watch-modal" role="dialog" aria-modal="true" aria-label={`${watching.title} video`}>
-          <button
-            className="watch-modal-close"
-            type="button"
-            onClick={() => setWatching(null)}
-            aria-label="Close video"
-          >
-            <X />
-          </button>
-
-          <div className="watch-modal-shell">
-            <div className="watch-modal-player">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${watching.videoId}?autoplay=1&playsinline=1&rel=0&controls=1`}
-                title={`${watching.title} video`}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
-            </div>
-
-            <div className="watch-modal-info">
-              <span>{category.title}</span>
-              <h2>{watching.title}</h2>
-              <p>{watching.client}</p>
-              {watching.projectSlug && (
-                <Link href={`/projects/${watching.projectSlug}`} onClick={() => setWatching(null)}>
-                  View project <ArrowRight />
-                </Link>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      <PortfolioWatchPlayer
+        current={watchingResolved}
+        works={works}
+        categoryTitle={category.title}
+        onClose={() => setWatching(null)}
+        onSelect={setWatching}
+      />
     </div>
   );
 }

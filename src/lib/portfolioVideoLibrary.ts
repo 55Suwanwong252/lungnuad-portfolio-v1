@@ -145,7 +145,7 @@ export function portfolioVideosForCategory(
         videoId: entry.videoId,
         category: entry.category,
         order: entry.order,
-        title: matched?.title || `Selected Work ${orderLabel}`,
+        title: matched?.title || `Portfolio Film ${orderLabel}`,
         subtitle: matched?.subtitle || category.title,
         client: matched?.client || "Lungnuad Production",
         year: matched?.year || "Portfolio",
