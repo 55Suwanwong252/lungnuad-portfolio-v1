@@ -67,14 +67,13 @@ export default function PortfolioWatchPlayer({
     <div className="portfolio-player-layer" role="dialog" aria-modal="true" aria-label={`${current.title} video`}>
       <div className="portfolio-player-scroll" ref={scrollerRef}>
         <div className="portfolio-player-card">
-          <button
+          <a
             className="portfolio-player-back"
-            type="button"
-            onClick={onClose}
-            aria-label="Back"
+            href="/projects"
+            aria-label="กลับหน้าผลงานรวม"
           >
             <ChevronLeft />
-          </button>
+          </a>
 
           <div className="portfolio-player-video">
             <iframe

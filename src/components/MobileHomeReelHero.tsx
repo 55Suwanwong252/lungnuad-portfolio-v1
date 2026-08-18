@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, Share2, Volume2, VolumeX } from "lucide-react";
+import { ChevronDown, Play, Share2, Volume2, VolumeX } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCms } from "@/components/CmsProvider";
 
@@ -14,6 +14,8 @@ export default function MobileHomeReelHero() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [reels, setReels] = useState<Reel[]>([fallback]);
   const [muted, setMuted] = useState(true);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     fetch("/api/reels", { cache: "no-store" })
@@ -32,7 +34,7 @@ export default function MobileHomeReelHero() {
   const meta = cms.reelMeta[selected.url] || {};
   const reelTitle = cms.homeReel.title || meta.title || selected.title;
 
-  const ensureAutoplay = useCallback(() => {
+  const ensureAutoplay = useCallback(async () => {
     const video = videoRef.current;
     if (!video) return;
 
@@ -43,7 +45,15 @@ export default function MobileHomeReelHero() {
     }
 
     video.playsInline = true;
-    video.play().catch(() => {});
+
+    try {
+      await video.play();
+      setPlaying(true);
+      setAutoplayBlocked(false);
+    } catch {
+      setPlaying(false);
+      setAutoplayBlocked(true);
+    }
   }, [muted]);
 
   useEffect(() => {
@@ -51,6 +61,8 @@ export default function MobileHomeReelHero() {
     if (!video) return;
 
     setMuted(true);
+    setPlaying(false);
+    setAutoplayBlocked(false);
     video.muted = true;
     video.defaultMuted = true;
     video.setAttribute("muted", "");
@@ -73,6 +85,24 @@ export default function MobileHomeReelHero() {
     };
   }, [selected.url, ensureAutoplay]);
 
+  async function startMutedPlayback() {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      video.muted = true;
+      video.defaultMuted = true;
+      video.setAttribute("muted", "");
+      video.volume = 1;
+      await video.play();
+      setMuted(true);
+      setPlaying(true);
+      setAutoplayBlocked(false);
+    } catch {
+      setAutoplayBlocked(true);
+    }
+  }
+
   async function toggleSound() {
     const video = videoRef.current;
     if (!video) return;
@@ -85,10 +115,13 @@ export default function MobileHomeReelHero() {
         video.volume = 1;
         await video.play();
         setMuted(false);
+        setPlaying(true);
+        setAutoplayBlocked(false);
       } else {
         video.muted = true;
         video.defaultMuted = true;
         setMuted(true);
+        setPlaying(!video.paused);
       }
     } catch {
       // If Safari blocks the first attempt, keep UI truthful.
@@ -127,7 +160,25 @@ export default function MobileHomeReelHero() {
         disablePictureInPicture
         onLoadedMetadata={ensureAutoplay}
         onCanPlay={ensureAutoplay}
+        onPlaying={() => {
+          setPlaying(true);
+          setAutoplayBlocked(false);
+        }}
+        onPause={() => setPlaying(false)}
       />
+
+      {autoplayBlocked && !playing && (
+        <button
+          className="mobile-home-reel-play-fallback"
+          type="button"
+          onClick={startMutedPlayback}
+          aria-label="Play reel"
+        >
+          <Play fill="currentColor" />
+          <span>PLAY</span>
+        </button>
+      )}
+
       <div className="mobile-home-reel-shade" style={{ opacity: cms.homeReel.overlayOpacity }} />
 
       <div className={`mobile-home-reel-copy ${alignClass} ${sizeClass}`}>

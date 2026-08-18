@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
 import {
@@ -46,19 +46,16 @@ export default function PortfolioMobileWatchRoute({
   const routeWork =
     works.find((work) => work.videoId === videoId) || works[0] || null;
 
-  const [current, setCurrent] = useState<PortfolioLibraryWork | null>(routeWork);
+  const [currentVideoId, setCurrentVideoId] = useState(
+    routeWork?.videoId || videoId
+  );
 
-  useEffect(() => {
-    if (routeWork) setCurrent(routeWork);
-  }, [routeWork?.videoId]);
+  const current =
+    works.find((work) => work.videoId === currentVideoId) ||
+    routeWork;
 
   function closePlayer() {
-    if (window.history.length > 1) {
-      router.back();
-      return;
-    }
-
-    router.push(`/projects/category/${slug}`);
+    router.push("/projects");
   }
 
   if (!current) return null;
@@ -69,7 +66,7 @@ export default function PortfolioMobileWatchRoute({
       works={works}
       categoryTitle={category.title}
       onClose={closePlayer}
-      onSelect={setCurrent}
+      onSelect={(work: PortfolioLibraryWork) => setCurrentVideoId(work.videoId)}
       mode="inline"
     />
   );
