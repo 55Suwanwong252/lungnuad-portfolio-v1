@@ -4,6 +4,7 @@ import { ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PortfolioLibraryWork } from "@/lib/portfolioVideoLibrary";
+import PortfolioPosterImage from "@/components/PortfolioPosterImage";
 
 export default function PortfolioWatchPlayer({
   current,
@@ -120,10 +121,14 @@ export default function PortfolioWatchPlayer({
                     onClick={() => choose(work)}
                     key={`${work.category}-${work.videoId}`}
                   >
-                    <span
-                      className="portfolio-player-next-cover"
-                      style={{ backgroundImage: `url("${work.poster}")` }}
-                    />
+                    <span className="portfolio-player-next-cover">
+                      <PortfolioPosterImage
+                        src={work.poster}
+                        videoId={work.videoId}
+                        alt={work.title}
+                        eager={work.order <= 4}
+                      />
+                    </span>
                     <strong>{work.title}</strong>
                     <small>{String(work.order).padStart(2, "0")} · {categoryTitle}</small>
                   </button>

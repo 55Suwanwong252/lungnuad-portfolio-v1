@@ -5002,3 +5002,63 @@ body{
   .quick-menu-scrim{z-index:2147482998!important}
   .quick-category-menu{z-index:2147482999!important}
 }
+
+/* =========================================================
+   BUILD 12.6 — DESKTOP AUTOPLAY STABILITY / MOBILE POSTER IMG / SMALLER TITLES
+   ========================================================= */
+
+/* Use a real <img> inside every 2:3 card instead of relying only on CSS
+   background-image. This is more reliable on iOS Safari and also supports
+   local custom poster artwork with a YouTube thumbnail fallback. */
+.portfolio-poster-img{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  border:0;
+  border-radius:inherit;
+  background:#030405;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.home-watch-card-shade,
+.category-library-cover::after,
+.category-library-number,
+.home-watch-card-year{
+  z-index:2;
+}
+.portfolio-player-next-cover::after{z-index:1}
+
+/* Keep background fallback but make the actual image the primary artwork. */
+.home-watch-card-media,
+.category-library-cover,
+.portfolio-player-next-cover{
+  background-image:none!important;
+}
+
+@media(max-width:767px){
+  /* Featured YouTube titles were overpowering the mobile hero. */
+  .portfolio-streaming-hero-copy h2,
+  .portfolio-streaming-hero-copy h2.is-long,
+  .portfolio-streaming-hero-copy h2.is-very-long{
+    max-width:80%!important;
+    font-size:clamp(16px,5.15vw,22px)!important;
+    line-height:1.08!important;
+    letter-spacing:-.035em!important;
+    -webkit-line-clamp:2!important;
+  }
+
+  /* The title shown under the full player should stay clearly secondary
+     to the video itself on a phone. */
+  .portfolio-player-heading h2,
+  .portfolio-player-heading h2.is-long,
+  .portfolio-player-heading h2.is-very-long{
+    font-size:clamp(17px,5.1vw,23px)!important;
+    line-height:1.08!important;
+  }
+}

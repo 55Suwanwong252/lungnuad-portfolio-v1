@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
 import PortfolioStreamingHero from "@/components/PortfolioStreamingHero";
+import PortfolioPosterImage from "@/components/PortfolioPosterImage";
 import { useYouTubeTitles } from "@/lib/useYouTubeTitles";
 import { useCms } from "@/components/CmsProvider";
 import PortfolioCategoryNav from "@/components/PortfolioCategoryNav";
@@ -116,8 +117,13 @@ export default function PortfolioCategoryLibrary({
                     setWatching(work);
                   }}
                   aria-label={`Play ${work.title}`}
-                  style={{ backgroundImage: `url("${work.poster}")` }}
                 >
+                  <PortfolioPosterImage
+                    src={work.poster}
+                    videoId={work.videoId}
+                    alt={work.title}
+                    eager={work.order <= 9}
+                  />
                   <span className="category-library-number">
                     {String(work.order).padStart(2, "0")}
                   </span>

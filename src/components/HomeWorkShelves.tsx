@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
 import PortfolioStreamingHero from "@/components/PortfolioStreamingHero";
+import PortfolioPosterImage from "@/components/PortfolioPosterImage";
 import { useYouTubeTitles } from "@/lib/useYouTubeTitles";
 import type { Project } from "@/lib/cms";
 import {
@@ -78,8 +79,13 @@ function ShelfRow({
                 onWatch(work);
               }}
               aria-label={`Play ${work.title}`}
-              style={{ backgroundImage: `url("${work.poster}")` }}
             >
+              <PortfolioPosterImage
+                src={work.poster}
+                videoId={work.videoId}
+                alt={work.title}
+                eager={work.order <= 4}
+              />
               <span className="home-watch-card-shade" />
               <span className="home-watch-card-year">
                 {String(work.order).padStart(2, "0")}
