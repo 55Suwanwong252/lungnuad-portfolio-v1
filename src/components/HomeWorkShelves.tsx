@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
+import PortfolioStreamingHero from "@/components/PortfolioStreamingHero";
 import { useYouTubeTitles } from "@/lib/useYouTubeTitles";
 import type { Project } from "@/lib/cms";
 import {
@@ -65,31 +66,25 @@ function ShelfRow({
         </div>
       </div>
 
-      <div className="home-watch-rail" ref={railRef}>
+      <div className="home-watch-rail-wrap">
+        <div className="home-watch-rail" ref={railRef}>
         {shelf.works.map((work) => (
           <article className="home-watch-card" key={work.id}>
-            <div
-              className="home-watch-card-media"
-              style={{ backgroundImage: `url("${work.cover}")` }}
+            <a
+              className="home-watch-card-media home-watch-card-hitarea"
+              href={`/watch/${shelf.key}/${work.videoId}`}
+              onClick={(event) => {
+                event.preventDefault();
+                onWatch(work);
+              }}
+              aria-label={`Play ${work.title}`}
+              style={{ backgroundImage: `url("${work.poster}")` }}
             >
               <span className="home-watch-card-shade" />
-              <a
-                className="home-watch-card-play"
-                href={`/watch/${shelf.key}/${work.videoId}`}
-                onClick={(event) => {
-                  if (!window.matchMedia("(max-width: 767px)").matches) {
-                    event.preventDefault();
-                    onWatch(work);
-                  }
-                }}
-                aria-label={`Play ${work.title}`}
-              >
-                <Play fill="currentColor" />
-              </a>
               <span className="home-watch-card-year">
                 {String(work.order).padStart(2, "0")}
               </span>
-            </div>
+            </a>
 
             <div className="home-watch-card-copy">
               {work.projectSlug ? (
@@ -99,10 +94,8 @@ function ShelfRow({
                   className="portfolio-work-title-button"
                   href={`/watch/${shelf.key}/${work.videoId}`}
                   onClick={(event) => {
-                    if (!window.matchMedia("(max-width: 767px)").matches) {
-                      event.preventDefault();
-                      onWatch(work);
-                    }
+                    event.preventDefault();
+                    onWatch(work);
                   }}
                 >
                   {work.title}
@@ -112,6 +105,17 @@ function ShelfRow({
             </div>
           </article>
         ))}
+        </div>
+        {showViewAll && (
+          <Link
+            className="home-watch-rail-view-all"
+            href={portfolioCategoryPath(shelf.key)}
+            aria-label={`ดูทั้งหมด — ${shelf.title}`}
+          >
+            <span>ดูทั้งหมด</span>
+            <small>{shelf.works.length} คลิป</small>
+          </Link>
+        )}
       </div>
     </section>
   );
@@ -121,10 +125,14 @@ export default function HomeWorkShelves({
   projects,
   showExploreLink = true,
   showShelfViewAll = true,
+  showStreamingHero = false,
+  showCategoryStreamingHeroes = false,
 }: {
   projects: Project[];
   showExploreLink?: boolean;
   showShelfViewAll?: boolean;
+  showStreamingHero?: boolean;
+  showCategoryStreamingHeroes?: boolean;
 }) {
   const [watching, setWatching] = useState<PortfolioLibraryWork | null>(null);
 
@@ -168,15 +176,35 @@ export default function HomeWorkShelves({
   const watchingShelf = watchingResolved
     ? shelves.find((shelf) => shelf.key === watchingResolved.category)
     : undefined;
+  const featuredShelf = shelves.find((shelf) => shelf.works.length > 0);
+  const featuredWork = featuredShelf?.works[0];
 
   return (
     <>
-      <section className="home-watch-zone">
+      <section className={`home-watch-zone ${showCategoryStreamingHeroes ? "has-category-streaming-heroes" : ""}`}>
+        {showCategoryStreamingHeroes && featuredWork && featuredShelf ? (
+          <div className="home-streaming-lead-preview">
+            <PortfolioStreamingHero
+              work={featuredWork}
+              categoryTitle={featuredShelf.title}
+              onWatch={setWatching}
+              priority
+            />
+          </div>
+        ) : showStreamingHero && featuredWork && featuredShelf ? (
+          <PortfolioStreamingHero
+            work={featuredWork}
+            categoryTitle={featuredShelf.title}
+            onWatch={setWatching}
+            priority
+          />
+        ) : null}
+
         <div className="home-watch-zone-head">
           <div>
             <span>WATCH / EXPLORE</span>
             <h2>Browse the work</h2>
-            <p>เลื่อนซ้าย–ขวาเพื่อเลือกชมผลงาน แล้วกด Play เพื่อดูต่อบนเว็บไซต์</p>
+            <p>เลือกชมแบบ Streaming — ตัวอย่างวิดีโอจะเล่นอัตโนมัติเมื่อเลื่อนมาถึง และกด Poster เพื่อดูฉบับเต็ม</p>
           </div>
           {showExploreLink && (
             <Link href="/projects">
@@ -186,13 +214,21 @@ export default function HomeWorkShelves({
         </div>
 
         <div className="home-watch-shelves">
-          {shelves.map((shelf) => (
-            <ShelfRow
-              key={shelf.key}
-              shelf={shelf}
-              onWatch={setWatching}
-              showViewAll={showShelfViewAll}
-            />
+          {shelves.map((shelf, index) => (
+            <div className="home-streaming-category-block" key={shelf.key}>
+              {showCategoryStreamingHeroes && index > 0 && shelf.works[0] && (
+                <PortfolioStreamingHero
+                  work={shelf.works[0]}
+                  categoryTitle={shelf.title}
+                  onWatch={setWatching}
+                />
+              )}
+              <ShelfRow
+                shelf={shelf}
+                onWatch={setWatching}
+                showViewAll={showShelfViewAll}
+              />
+            </div>
           ))}
         </div>
       </section>

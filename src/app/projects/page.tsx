@@ -20,6 +20,7 @@ export default function ProjectsPage() {
             projects={cms.projects}
             showExploreLink={false}
             showShelfViewAll
+            showStreamingHero
           />
         </div>
       </section>

@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Play } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useMemo, useState } from "react";
 import PortfolioWatchPlayer from "@/components/PortfolioWatchPlayer";
+import PortfolioStreamingHero from "@/components/PortfolioStreamingHero";
 import { useYouTubeTitles } from "@/lib/useYouTubeTitles";
 import { useCms } from "@/components/CmsProvider";
 import PortfolioCategoryNav from "@/components/PortfolioCategoryNav";
@@ -88,28 +89,11 @@ export default function PortfolioCategoryLibrary({
         </header>
 
         {featured && (
-          <section
-            className="category-featured"
-            style={{ backgroundImage: `url("${featured.cover}")` }}
-          >
-            <div className="category-featured-shade" />
-            <div className="category-featured-copy">
-              <span>FEATURED</span>
-              <h2>{featured.title}</h2>
-              <p>{featured.subtitle}</p>
-              <a
-                href={`/watch/${slug}/${featured.videoId}`}
-                onClick={(event) => {
-                  if (!window.matchMedia("(max-width: 767px)").matches) {
-                    event.preventDefault();
-                    setWatching(featured);
-                  }
-                }}
-              >
-                <Play fill="currentColor" /> Play
-              </a>
-            </div>
-          </section>
+          <PortfolioStreamingHero
+            work={featured}
+            categoryTitle={category.title}
+            onWatch={setWatching}
+          />
         )}
 
         <section className="category-library-section">
@@ -124,27 +108,20 @@ export default function PortfolioCategoryLibrary({
           <div className="category-library-grid">
             {works.map((work) => (
               <article className="category-library-card" key={work.id}>
-                <div
-                  className="category-library-cover"
-                  style={{ backgroundImage: `url("${work.cover}")` }}
+                <a
+                  className="category-library-cover category-library-hitarea"
+                  href={`/watch/${slug}/${work.videoId}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setWatching(work);
+                  }}
+                  aria-label={`Play ${work.title}`}
+                  style={{ backgroundImage: `url("${work.poster}")` }}
                 >
                   <span className="category-library-number">
                     {String(work.order).padStart(2, "0")}
                   </span>
-                  <a
-                    className="category-library-play"
-                    href={`/watch/${slug}/${work.videoId}`}
-                    onClick={(event) => {
-                      if (!window.matchMedia("(max-width: 767px)").matches) {
-                        event.preventDefault();
-                        setWatching(work);
-                      }
-                    }}
-                    aria-label={`Play ${work.title}`}
-                  >
-                    <Play fill="currentColor" />
-                  </a>
-                </div>
+                </a>
 
                 <div className="category-library-copy">
                   {work.projectSlug ? (
@@ -154,10 +131,8 @@ export default function PortfolioCategoryLibrary({
                       className="portfolio-work-title-button"
                       href={`/watch/${slug}/${work.videoId}`}
                       onClick={(event) => {
-                        if (!window.matchMedia("(max-width: 767px)").matches) {
-                          event.preventDefault();
-                          setWatching(work);
-                        }
+                        event.preventDefault();
+                        setWatching(work);
                       }}
                     >
                       {work.title}

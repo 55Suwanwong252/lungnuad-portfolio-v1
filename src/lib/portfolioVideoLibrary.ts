@@ -4,6 +4,7 @@ import {
   type PortfolioCategorySlug,
 } from "@/lib/portfolioCategories";
 import { youtubeVideoId } from "@/lib/youtube";
+import { portfolioVerticalPoster } from "@/lib/portfolioPosters";
 
 export type PortfolioVideoEntry = {
   id: string;
@@ -22,6 +23,7 @@ export type PortfolioLibraryWork = {
   client: string;
   year: string;
   cover: string;
+  poster: string;
   projectSlug?: string;
 };
 
@@ -140,6 +142,8 @@ export function portfolioVideosForCategory(
       const matched = cmsByVideo.get(entry.videoId);
       const orderLabel = String(entry.order).padStart(2, "0");
 
+      const cover = matched?.cover || portfolioVideoThumbnail(entry.videoId);
+
       return {
         id: entry.id,
         videoId: entry.videoId,
@@ -149,7 +153,8 @@ export function portfolioVideosForCategory(
         subtitle: matched?.subtitle || category.title,
         client: matched?.client || "Lungnuad Production",
         year: matched?.year || "Portfolio",
-        cover: matched?.cover || portfolioVideoThumbnail(entry.videoId),
+        cover,
+        poster: portfolioVerticalPoster(entry.videoId, cover),
         projectSlug: matched?.slug,
       };
     });

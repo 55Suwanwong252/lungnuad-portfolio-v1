@@ -30,7 +30,7 @@ export default function MediaPlayer({ project }: { project: Project }) {
           </button>
         ) : (
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0&controls=1`}
+            src={`https://www.youtube-nocookie.com/embed/${youtubeId}?autoplay=1&mute=0&playsinline=1&rel=0&controls=1`}
             title={`${project.title} video`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen

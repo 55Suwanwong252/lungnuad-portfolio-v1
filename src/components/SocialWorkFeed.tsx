@@ -120,7 +120,7 @@ export default function SocialWorkFeed({ projects, compact = false, showFilters 
           <div className="watch-modal-shell">
             <div className="watch-modal-player">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId(watching.video.src)}?autoplay=1&playsinline=1&rel=0&controls=1`}
+                src={`https://www.youtube-nocookie.com/embed/${youtubeVideoId(watching.video.src)}?autoplay=1&mute=0&playsinline=1&rel=0&controls=1`}
                 title={`${watching.title} video`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen

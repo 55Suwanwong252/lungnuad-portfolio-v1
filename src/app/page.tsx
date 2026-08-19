@@ -12,13 +12,23 @@ export default function Home() {
   const featured = cms.projects.find((p) => p.featured) || cms.projects[0];
 
   return (
-    <>
-      <MobileHomeReelHero />
+    <div className="light-page home-streaming-page" id="home-content">
+      <section className="browse-work-section home-mobile-primary-browse home-streaming-first">
+        <div className="browse-work-shell">
+          <HomeWorkShelves
+            projects={cms.projects}
+            showCategoryStreamingHeroes
+          />
+        </div>
+      </section>
 
-      <div className="light-page" id="home-content">
-        <HomeProfileCover cms={cms} />
+      <div className="home-mobile-reel-late">
+        <MobileHomeReelHero />
+      </div>
 
-        <section className="home-hero-light home-hero-after-cover home-hero-editorial home-mobile-late-story">
+      <HomeProfileCover cms={cms} />
+
+      <section className="home-hero-light home-hero-after-cover home-hero-editorial home-mobile-late-story">
           <div className="hero-copy-light">
             <span className="light-kicker">{cms.home.heroEyebrow}</span>
             <h1>
@@ -90,12 +100,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="browse-work-section home-mobile-primary-browse">
-          <div className="browse-work-shell">
-            <HomeWorkShelves projects={cms.projects} />
-          </div>
-        </section>
-
         <section className="clean-contact home-mobile-contact">
           <div><MapPin /><span>{cms.site.serviceArea}</span></div>
           <Link href="/contact">Start a project <ArrowRight /></Link>
@@ -118,7 +122,6 @@ export default function Home() {
           </section>
         )}
 
-      </div>
-    </>
+    </div>
   );
 }

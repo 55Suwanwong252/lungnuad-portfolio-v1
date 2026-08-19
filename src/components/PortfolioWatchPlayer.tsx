@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, Play } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PortfolioLibraryWork } from "@/lib/portfolioVideoLibrary";
@@ -58,6 +58,10 @@ export default function PortfolioWatchPlayer({
 
   if (!current || !mounted) return null;
 
+  const titleClass =
+    current.title.length > 72 ? "is-very-long" :
+    current.title.length > 42 ? "is-long" : "";
+
   function choose(work: PortfolioLibraryWork) {
     onSelect(work);
     scrollerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -78,7 +82,7 @@ export default function PortfolioWatchPlayer({
           <div className="portfolio-player-video">
             <iframe
               key={current.videoId}
-              src={`https://www.youtube-nocookie.com/embed/${current.videoId}?autoplay=1&playsinline=1&rel=0&controls=1&modestbranding=1`}
+              src={`https://www.youtube-nocookie.com/embed/${current.videoId}?autoplay=1&mute=0&playsinline=1&rel=0&controls=1&modestbranding=1`}
               title={`${current.title} video`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
@@ -88,7 +92,7 @@ export default function PortfolioWatchPlayer({
           <div className="portfolio-player-details">
             <div className="portfolio-player-heading">
               <span>{categoryTitle}</span>
-              <h2>{current.title}</h2>
+              <h2 className={titleClass}>{current.title}</h2>
               <p>{current.client}</p>
             </div>
 
@@ -118,10 +122,8 @@ export default function PortfolioWatchPlayer({
                   >
                     <span
                       className="portfolio-player-next-cover"
-                      style={{ backgroundImage: `url("${work.cover}")` }}
-                    >
-                      <i><Play fill="currentColor" /></i>
-                    </span>
+                      style={{ backgroundImage: `url("${work.poster}")` }}
+                    />
                     <strong>{work.title}</strong>
                     <small>{String(work.order).padStart(2, "0")} · {categoryTitle}</small>
                   </button>
